@@ -2,8 +2,6 @@ package anbaximeiza.memo.controllers;
 
 import java.net.URL;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
@@ -41,7 +39,6 @@ public class MainNavController implements Initializable{
 
     
     public void createNewProjectName(){
-        displayMessage("hahaha", MessageType.SUCCESS);
         projectList.setEditable(true);
         projectList.setCellFactory(TextFieldListCell.forListView());
         addProjectList(getDefaultName());
@@ -65,14 +62,17 @@ public class MainNavController implements Initializable{
     public void onCancelProjectName(ListView.EditEvent<String> event){
         String newName = event.getNewValue();
         if (newName==null){
+            displayMessage("Name cannot be empty!", MessageType.ERROR);
+            projectList.getItems().set(event.getIndex(), previousName);
             return;
         }
         if (newName.strip().equals("")) {
-            //report error
+            displayMessage("Name must not be all space!", MessageType.ERROR);
             projectList.getItems().set(event.getIndex(), previousName);
+            return;
         }
         if (projectNameSet.contains(newName)){
-            //report error
+            displayMessage("Name already exists!", MessageType.ERROR);
             projectList.getItems().set(event.getIndex(), previousName);
         } else{
             projectNameSet.remove(previousName);

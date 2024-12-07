@@ -24,6 +24,8 @@ public class MessagePane {
         messageLabel.setAlignment(Pos.TOP_LEFT);
         messageLabel.setLayoutX(81);
         messageLabel.setLayoutY(12);
+        messageLabel.setMaxHeight(59.2);
+        messageLabel.setMaxWidth(150.4);
         messageLabel.setFont(Font.font("Arial", 15));
         messageLabel.setWrapText(true);
 
@@ -32,16 +34,16 @@ public class MessagePane {
         result.getChildren().add(messageLabel);
         result.setLayoutX(881);
         result.setLayoutY(476);
-        
+
         //
         switch (type) {
             case ERROR:
                 result.setStyle(
-                        "-fx-border-color: red; -fx-border-radius: 15; -fx-background-color: transparent; -fx-border-width: 3;");
+                        "-fx-padding: 2;-fx-border-color: red; -fx-border-radius: 15; -fx-background-color: transparent; -fx-border-width: 3;");
                 break;
             case SUCCESS:
                 result.setStyle(
-                        "-fx-border-color: green; -fx-border-radius: 15; -fx-background-color: transparent; -fx-border-width: 3;");
+                        "-fx-padding: 2; -fx-border-color: green; -fx-border-radius: 15; -fx-background-color: transparent; -fx-border-width: 3;");
             default:// left for warning
                 break;
         }
