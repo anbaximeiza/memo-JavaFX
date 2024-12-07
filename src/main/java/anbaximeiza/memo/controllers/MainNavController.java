@@ -2,22 +2,33 @@ package anbaximeiza.memo.controllers;
 
 import java.net.URL;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 public class MainNavController implements Initializable{
 
     @FXML private ListView<String> projectList;
     @FXML private AnchorPane toolPane;
     @FXML private TextField nameInputTextField;
+    @FXML private VBox messageBox;
+
 
     int projectCount = 0;
     HashSet<String> projectNameSet;
@@ -29,10 +40,12 @@ public class MainNavController implements Initializable{
     }
 
     
-    public void tempListener(){
+    public void createNewProjectName(){
+        displayMessage("hahaha", MessageType.SUCCESS);
         projectList.setEditable(true);
         projectList.setCellFactory(TextFieldListCell.forListView());
         addProjectList(getDefaultName());
+        projectList.scrollTo(projectCount);
         projectCount++;
     }
 
@@ -51,8 +64,12 @@ public class MainNavController implements Initializable{
 
     public void onCancelProjectName(ListView.EditEvent<String> event){
         String newName = event.getNewValue();
-        if (newName.equals(previousName)){
+        if (newName==null){
             return;
+        }
+        if (newName.strip().equals("")) {
+            //report error
+            projectList.getItems().set(event.getIndex(), previousName);
         }
         if (projectNameSet.contains(newName)){
             //report error
@@ -66,6 +83,33 @@ public class MainNavController implements Initializable{
 
     public void onClickProjectName(){
         previousName = projectList.getSelectionModel().getSelectedItem();
+    }
+
+    public void messageSlideIn(AnchorPane message){
+        TranslateTransition temp =  new TranslateTransition(Duration.millis(300));
+        temp.setByX(-250);
+        temp.setNode(message);
+        temp.play();
+    }
+
+    public void messageSlideOut(AnchorPane message){
+        TranslateTransition temp =  new TranslateTransition(Duration.millis(300));
+        temp.setByX(250);
+        temp.setNode(message);
+        temp.play();
+    }
+
+
+    public void displayMessage(String message, MessageType type ){
+        AnchorPane messagePane = MessagePane.getAnchorPane(message, type);
+        messageBox.getChildren().add(messagePane);
+
+        KeyFrame f1 = new KeyFrame(Duration.millis(0), e -> messageSlideIn(messagePane));
+        KeyFrame f2 = new KeyFrame(Duration.millis(1500), e -> messageSlideOut(messagePane));
+        KeyFrame f3 = new KeyFrame(Duration.millis(1850), e -> messageBox.getChildren().remove(0));
+        Timeline display =  new Timeline(f1,f2,f3);
+        display.play();
+
     }
     
 }
