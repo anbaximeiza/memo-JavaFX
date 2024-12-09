@@ -2,9 +2,17 @@ package anbaximeiza.memo.controllers;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.Random;
+import java.util.random.*;;
 
 enum MessageType {
     ERROR,
@@ -12,7 +20,7 @@ enum MessageType {
     WARNNING
 }
 
-public class MessagePane {
+public class PaneMaker {
     public static AnchorPane getAnchorPane(String message, MessageType type) {
         AnchorPane result = new AnchorPane();
         result.setPrefSize(238.4, 80.8);
@@ -48,6 +56,27 @@ public class MessagePane {
                 break;
         }
 
+        return result;
+    }
+
+    public static Tab getContentTab(String name){
+        Tab result = new Tab(name);
+        Random rand = new Random();
+
+        ScrollPane scrollPane = new ScrollPane();
+        AnchorPane anchorPane = new AnchorPane();
+        scrollPane.setLayoutX(0);
+        scrollPane.setLayoutY(0);
+
+        String hex = String.format("#%02x%02x%02x", rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+        anchorPane.setStyle("-fx-background-color: "+hex+";");
+        anchorPane.setLayoutX(0);
+        anchorPane.setLayoutY(0);
+        anchorPane.setPrefHeight(100);
+        anchorPane.setPrefWidth(100);
+        scrollPane.setContent(anchorPane);
+
+        result.setContent(scrollPane);
         return result;
     }
 }
