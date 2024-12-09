@@ -46,10 +46,12 @@ public class MainNavController implements Initializable{
         projectCount++;
     }
 
+    //need to work on further: create a new project space when the name is created
     public void addProjectList(String itemName){
         projectList.getItems().add(itemName);
     }
 
+    //generate a default name
     public String getDefaultName(){
         int temp = 0;
         while (projectNameSet.contains("Untitled-" + String.valueOf(temp))) {
@@ -59,10 +61,10 @@ public class MainNavController implements Initializable{
         return "Untitled-" + String.valueOf(temp);
     }
 
+    //when the user exit editing the name
     public void onCancelProjectName(ListView.EditEvent<String> event){
         String newName = event.getNewValue();
-        if (newName==null){
-            displayMessage("Name cannot be empty!", MessageType.ERROR);
+        if (newName==null){//when no change is detected
             projectList.getItems().set(event.getIndex(), previousName);
             return;
         }
@@ -81,6 +83,7 @@ public class MainNavController implements Initializable{
         }
     }
 
+    //save the previous name so it can be restored
     public void onClickProjectName(){
         previousName = projectList.getSelectionModel().getSelectedItem();
     }
