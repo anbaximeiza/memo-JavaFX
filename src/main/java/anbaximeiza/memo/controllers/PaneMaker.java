@@ -7,7 +7,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -64,17 +66,28 @@ public class PaneMaker {
         Random rand = new Random();
 
         ScrollPane scrollPane = new ScrollPane();
-        AnchorPane anchorPane = new AnchorPane();
+        GridPane gridPane = new GridPane();
         scrollPane.setLayoutX(0);
         scrollPane.setLayoutY(0);
+        scrollPane.setMaxSize(672, 530.4);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefHeight(530);
+        gridPane.setPrefWidth(656.8);
+        gridPane.setLayoutX(0);
+        gridPane.setLayoutY(0);
 
         String hex = String.format("#%02x%02x%02x", rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        anchorPane.setStyle("-fx-background-color: "+hex+";");
-        anchorPane.setLayoutX(0);
-        anchorPane.setLayoutY(0);
-        anchorPane.setPrefHeight(100);
-        anchorPane.setPrefWidth(100);
-        scrollPane.setContent(anchorPane);
+        gridPane.setStyle("-fx-background-color: "+hex+";");
+
+        ColumnConstraints cc = new ColumnConstraints();
+        cc.setPercentWidth(20);
+        gridPane.getColumnConstraints().addAll(cc,cc,cc,cc,cc);
+
+        gridPane.getRowConstraints().add(new RowConstraints(130));
+
+        gridPane.setGridLinesVisible(true);
+
+        scrollPane.setContent(gridPane);
 
         result.setContent(scrollPane);
         return result;
