@@ -1,6 +1,7 @@
 package anbaximeiza.memo.controllers;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -24,6 +25,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -34,17 +36,20 @@ public class MainNavController implements Initializable{
     @FXML private TextField nameInputTextField;
     @FXML private VBox messageBox;
     @FXML private TabPane contentDisplayPane;
+    @FXML private AnchorPane plusSignPane;
 
     HashSet<String> projectNameSet;
     HashSet<String> openedProjectSet;
-    HashMap<String,Tab> projectContentMap;
+    HashMap<String,Tab> projectTabMap;
+    HashMap<String,ArrayList<Label>> projectContentMap;
     String previousName;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         projectNameSet = new HashSet<>();
+        projectTabMap = new HashMap<>();
+        openedProjectSet = new HashSet<>(); 
         projectContentMap = new HashMap<>();
-        openedProjectSet = new HashSet<>();
     }
 
     
@@ -64,10 +69,15 @@ public class MainNavController implements Initializable{
             public void handle(Event event) {
                 Tab temp = (Tab) event.getSource();
                 openedProjectSet.remove(temp.getText());
+                if (contentDisplayPane.getTabs().size()==0){
+                    plusSignPane.setVisible(false);
+                }
             }
             
         });
-        projectContentMap.put(itemName, contentPane);
+        projectTabMap.put(itemName, contentPane);
+        projectContentMap.put(itemName, new ArrayList<Label>());
+        
     }
 
     //generate a default name
@@ -101,7 +111,7 @@ public class MainNavController implements Initializable{
                 openedProjectSet.add(newName);
             }
             projectNameSet.remove(previousName);
-            projectContentMap.put(newName, projectContentMap.remove(previousName));
+            projectTabMap.put(newName, projectTabMap.remove(previousName));
             projectList.getItems().set(event.getIndex(), newName);
             projectNameSet.add(newName);
             
@@ -110,9 +120,10 @@ public class MainNavController implements Initializable{
 
     //save the previous name so it can be restored
     public void onClickProjectName(){
+        plusSignPane.setVisible(true);
         previousName = projectList.getSelectionModel().getSelectedItem();
         if (!openedProjectSet.contains(previousName)){
-            Tab temp = projectContentMap.get(previousName);
+            Tab temp = projectTabMap.get(previousName);
             contentDisplayPane.getTabs().add(temp);
             openedProjectSet.add(previousName);
         }
@@ -147,6 +158,18 @@ public class MainNavController implements Initializable{
         Timeline display =  new Timeline(f1,f2,f3);
         display.play();
 
+    }
+
+    public void onClickNewNote(){
+        Tab currentTab = contentDisplayPane.getSelectionModel().getSelectedItem();
+        GridPane selectedPane = (GridPane)((ScrollPane)currentTab.getContent()).getContent();
+        int temp = projectContentMap.get(currentTab.getText()).size();
+        Label ugood = new Label("You good over there?");
+        if (temp%5 == 0){
+            selectedPane.getRowConstraints().add(new RowConstraints(130));
+        }
+        selectedPane.add(ugood,temp%5,temp/5);
+        projectContentMap.get(currentTab.getText()).add(ugood);
     }
     
 }
