@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
@@ -70,25 +71,26 @@ public class PaneMaker {
         scrollPane.setLayoutX(0);
         scrollPane.setLayoutY(0);
         scrollPane.setMaxSize(672, 530.4);
+        scrollPane.setMinHeight(530.4);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(530);
         gridPane.setPrefWidth(656.8);
         gridPane.setLayoutX(0);
         gridPane.setLayoutY(0);
-
+        scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
+        
         String hex = String.format("#%02x%02x%02x", rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         gridPane.setStyle("-fx-background-color: "+hex+";");
 
         ColumnConstraints cc = new ColumnConstraints();
         cc.setPercentWidth(20);
         gridPane.getColumnConstraints().addAll(cc,cc,cc,cc,cc);
-
         gridPane.getRowConstraints().add(new RowConstraints(130));
 
         gridPane.setGridLinesVisible(true);
 
+        
         scrollPane.setContent(gridPane);
-
         result.setContent(scrollPane);
         return result;
     }

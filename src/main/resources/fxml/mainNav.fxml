@@ -33,11 +33,15 @@
 -->
 
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Ellipse?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="873.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anbaximeiza.memo.controllers.MainNavController">
@@ -56,9 +60,32 @@
          </children>
       </VBox>
       <VBox fx:id="messageBox" alignment="BOTTOM_LEFT" layoutX="873.0" prefHeight="560.0" prefWidth="238.0" />
-      <TabPane fx:id="contentDisplayPane" layoutX="202.0" prefHeight="560.0" prefWidth="672.0" />
+      <TabPane fx:id="contentDisplayPane" layoutX="202.0" onMouseClicked="#onSwitchTab" prefHeight="560.0" prefWidth="672.0" />
       <AnchorPane fx:id="plusSignPane" layoutX="241.0" layoutY="471.0" prefHeight="52.0" prefWidth="45.0" visible="false">
          <children>
+            <Ellipse layoutX="23.0" layoutY="30.0" onMouseClicked="#onClickNewNote" radiusX="29.0" radiusY="30.0" stroke="TRANSPARENT" strokeType="INSIDE">
+               <fill>
+                  <RadialGradient centerX="0.5176991319234392" centerY="0.5492424314672297" radius="0.5">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.006729475100942127">
+                           <color>
+                              <Color />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" opacity="0.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </fill>
+            </Ellipse>
             <Ellipse fill="DODGERBLUE" layoutX="27.0" layoutY="27.0" onMouseClicked="#onClickNewNote" radiusX="27.0" radiusY="27.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <ImageView fitHeight="44.0" fitWidth="41.0" layoutX="6.0" layoutY="7.0" onMouseClicked="#onClickNewNote" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -67,5 +94,6 @@
             </ImageView>
          </children>
       </AnchorPane>
+      <ScrollBar fx:id="contentScrollBar" layoutX="858.0" layoutY="30.0" max="1.0" orientation="VERTICAL" prefHeight="530.0" prefWidth="14.0" style="-fx-background-color: transparent;" visible="false" />
    </children>
 </AnchorPane>
