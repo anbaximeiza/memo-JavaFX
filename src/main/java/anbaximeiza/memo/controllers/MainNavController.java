@@ -1,6 +1,8 @@
 package anbaximeiza.memo.controllers;
 
 import java.net.URL;
+import java.security.Key;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,12 +11,8 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -59,17 +57,22 @@ public class MainNavController implements Initializable{
         projectTabMap = new HashMap<>();
         openedProjectSet = new HashSet<>(); 
         projectContentMap = new HashMap<>();
+        contentDisplayPane.getSelectionModel().selectedItemProperty().addListener(
+            new ChangeListener<Tab>() {
+                @Override
+                public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+                    if (newValue == null){
+                        return;
+                    }
+                    KeyFrame f1 = new KeyFrame(Duration.millis(250), e-> updateAndBindScrollBar((ScrollPane)newValue.getContent()));
+                    Timeline ss = new Timeline(f1);
+                    ss.play();
+                }
+            }
+        );
     }
 
-    
-    public void createNewProjectName(){
-        projectList.setEditable(true);
-        projectList.setCellFactory(TextFieldListCell.forListView());
-        addProjectList(getDefaultName());
-        projectList.scrollTo(projectList.getItems().size()-1);
-    }
-
-    //When the plus sign on the top of the ListView is clicked
+     //When the plus sign on the top of the ListView is clicked
     //need to work on further: create a new project space when the name is created
     public void addProjectList(String itemName){
         projectList.getItems().add(itemName);
@@ -83,12 +86,20 @@ public class MainNavController implements Initializable{
                     plusSignPane.setVisible(false);
                 }
             }
-            
+        
         });
         projectTabMap.put(itemName, contentPane);
         projectContentMap.put(itemName, new ArrayList<Label>());
         
     }
+
+    public void createNewProjectName(){
+        projectList.setEditable(true);
+        projectList.setCellFactory(TextFieldListCell.forListView());
+        addProjectList(getDefaultName());
+        projectList.scrollTo(projectList.getItems().size()-1);
+    }
+
 
     //generate a default name
     public String getDefaultName(){
@@ -180,29 +191,19 @@ public class MainNavController implements Initializable{
         Tab currentTab = contentDisplayPane.getSelectionModel().getSelectedItem();
         ScrollPane tempPane = ((ScrollPane)currentTab.getContent());
         GridPane selectedPane = (GridPane)tempPane.getContent();
-        setScrollBarVisAmount(tempPane);
         int temp = projectContentMap.get(currentTab.getText()).size();
         Label ugood = new Label("You good over there?");
         if (temp%5 == 0){
             selectedPane.getRowConstraints().add(new RowConstraints(130));
-            setScrollBarVisAmount(tempPane);
+            KeyFrame f1 = new KeyFrame(Duration.millis(80), e->setContentScrollBarVisAmount(tempPane));
+            Timeline ss = new Timeline(f1);
+            ss.play();
         }
         selectedPane.add(ugood,temp%5,temp/5);
         projectContentMap.get(currentTab.getText()).add(ugood);
     }
 
-    //when anywhere on the project display section(Tabpane) is clicked
-    public void onSwitchTab(){
-        Tab currentTab = contentDisplayPane.getSelectionModel().getSelectedItem();
-        if (currentTab == null){
-            return;
-        }
-        ScrollPane currentPane = (ScrollPane)(currentTab.getContent());
-        currentPane.vvalueProperty().bindBidirectional(contentScrollBar.valueProperty());
-        setScrollBarVisAmount(currentPane);
-    }
-
-    public void setScrollBarVisAmount(ScrollPane currentPane){
+    public void setContentScrollBarVisAmount(ScrollPane currentPane){
         ScrollBar temp = (ScrollBar)currentPane.getChildrenUnmodifiable().get(1);
         contentScrollBar.setVisibleAmount(temp.getVisibleAmount());
         if (contentScrollBar.getVisibleAmount()<=1){
@@ -210,6 +211,11 @@ public class MainNavController implements Initializable{
         } else{
             contentScrollBar.setVisible(false);
         }
+    }
+
+    public void updateAndBindScrollBar(ScrollPane currentPane){
+        currentPane.vvalueProperty().bindBidirectional(contentScrollBar.valueProperty());
+        setContentScrollBarVisAmount(currentPane);
     }
     
 }
