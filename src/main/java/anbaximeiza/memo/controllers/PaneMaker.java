@@ -1,5 +1,6 @@
 package anbaximeiza.memo.controllers;
 
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -14,8 +15,13 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
-import java.util.random.*;;
+
+import anbaximeiza.memo.ContentCell;;
 
 enum MessageType {
     ERROR,
@@ -24,7 +30,7 @@ enum MessageType {
 }
 
 public class PaneMaker {
-    public static AnchorPane getAnchorPane(String message, MessageType type) {
+    public AnchorPane getAnchorPane(String message, MessageType type) {
         AnchorPane result = new AnchorPane();
         result.setPrefSize(238.4, 80.8);
         result.setMaxHeight(80.8);
@@ -62,7 +68,7 @@ public class PaneMaker {
         return result;
     }
 
-    public static Tab getContentTab(String name){
+    public Tab getContentTab(String name){
         Tab result = new Tab(name);
         Random rand = new Random();
 
@@ -87,11 +93,22 @@ public class PaneMaker {
         gridPane.getColumnConstraints().addAll(cc,cc,cc,cc,cc);
         gridPane.getRowConstraints().add(new RowConstraints(130));
 
-        gridPane.setGridLinesVisible(true);
+        //gridPane.setGridLinesVisible(true);
 
         
         scrollPane.setContent(gridPane);
         result.setContent(scrollPane);
         return result;
+    }
+
+    public AnchorPane getContentHolder() throws MalformedURLException, IOException{
+        return FXMLLoader.load(getClass().getResource("/fxml/contentHolderTemp.fxml"));
+    }
+
+    public ContentCell getContentCell() throws MalformedURLException, IOException{
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = currentDate.format(formatter);
+        return new ContentCell(getContentHolder(),formattedDate);
     }
 }

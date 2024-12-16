@@ -1,5 +1,7 @@
 package anbaximeiza.memo.controllers;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Key;
 import java.sql.Time;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 
+import anbaximeiza.memo.ContentCell;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -48,11 +51,13 @@ public class MainNavController implements Initializable{
     HashSet<String> projectNameSet;
     HashSet<String> openedProjectSet;
     HashMap<String,Tab> projectTabMap;
-    HashMap<String,ArrayList<Label>> projectContentMap;
+    HashMap<String,ArrayList<ContentCell>> projectContentMap;
     String previousName;
+    PaneMaker paneMaker;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        paneMaker = new PaneMaker();
         projectNameSet = new HashSet<>();
         projectTabMap = new HashMap<>();
         openedProjectSet = new HashSet<>(); 
@@ -76,7 +81,7 @@ public class MainNavController implements Initializable{
     //need to work on further: create a new project space when the name is created
     public void addProjectList(String itemName){
         projectList.getItems().add(itemName);
-        Tab contentPane = PaneMaker.getContentTab(itemName);
+        Tab contentPane = paneMaker.getContentTab(itemName);
         contentPane.setOnClosed(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
@@ -89,7 +94,7 @@ public class MainNavController implements Initializable{
         
         });
         projectTabMap.put(itemName, contentPane);
-        projectContentMap.put(itemName, new ArrayList<Label>());
+        projectContentMap.put(itemName, new ArrayList<ContentCell>());
         
     }
 
@@ -112,6 +117,7 @@ public class MainNavController implements Initializable{
     }
 
     //when the user exit editing the name
+    //planning to only allow user to edit the name when the tab is opened
     public void onCancelProjectName(ListView.EditEvent<String> event){
         String newName = event.getNewValue();
         if (newName==null){//when no change is detected
@@ -174,7 +180,7 @@ public class MainNavController implements Initializable{
 
     //Called when a message is needed to be displayed(pop up on the down right corner)
     public void displayMessage(String message, MessageType type ){
-        AnchorPane messagePane = PaneMaker.getAnchorPane(message, type);
+        AnchorPane messagePane = paneMaker.getAnchorPane(message, type);
         messageBox.getChildren().add(messagePane);
 
         KeyFrame f1 = new KeyFrame(Duration.millis(0), e -> messageSlideIn(messagePane));
@@ -187,22 +193,24 @@ public class MainNavController implements Initializable{
 
 
     //When the blue plus sign on the down left corner of the content display pane is clicked
-    public void onClickNewNote(){
+    public void onClickNewNote() throws MalformedURLException, IOException{
         Tab currentTab = contentDisplayPane.getSelectionModel().getSelectedItem();
         ScrollPane tempPane = ((ScrollPane)currentTab.getContent());
         GridPane selectedPane = (GridPane)tempPane.getContent();
         int temp = projectContentMap.get(currentTab.getText()).size();
-        Label ugood = new Label("You good over there?");
+        ContentCell ugood = paneMaker.getContentCell();
         if (temp%5 == 0){
             selectedPane.getRowConstraints().add(new RowConstraints(130));
             KeyFrame f1 = new KeyFrame(Duration.millis(80), e->setContentScrollBarVisAmount(tempPane));
             Timeline ss = new Timeline(f1);
             ss.play();
         }
-        selectedPane.add(ugood,temp%5,temp/5);
+        selectedPane.add(ugood.getHolder(),temp%5,temp/5);
         projectContentMap.get(currentTab.getText()).add(ugood);
     }
 
+    //needs to be called with a delay otherwise when the scrollpane is not fully loaded
+    //will not work
     public void setContentScrollBarVisAmount(ScrollPane currentPane){
         ScrollBar temp = (ScrollBar)currentPane.getChildrenUnmodifiable().get(1);
         contentScrollBar.setVisibleAmount(temp.getVisibleAmount());
