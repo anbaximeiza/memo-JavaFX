@@ -7,24 +7,43 @@ import javafx.scene.layout.AnchorPane;
 
 public class ContentCell {
     
+    //The projectName(key) that's used for lookup the arrayList for cell
+    //is stored as the id of the first children of the anchorpane
+
     private AnchorPane holder;
-    private String mainGoal;
+    private String mainGoal = "Deafult";
+    private String mainGoalSpec = "Deafult";
     private ArrayList<String> subGoals;
     //colors
-    private String date;
+    private String createDate;
+    private String endDate = "null";
 
     public ContentCell(AnchorPane holder){
         this.holder = holder;
     }
 
-    public ContentCell(AnchorPane holder, String date){
+    public ContentCell(AnchorPane holder, String createDate){
         this.holder = holder;
-        this.date =date;
-        selfUpdate();
+        this.createDate = createDate;
+    }
+
+    public void selfUpdate(int index){
+
+        ((Label)holder.getChildren().get(2)).setText(createDate+ "|" + endDate);
+        ((Label)holder.getChildren().get(4)).setText("1- ssssss");
+
     }
 
     public AnchorPane getHolder() {
         return holder;
+    }
+
+    public String getMainGoal() {
+        return mainGoal;
+    }
+
+    public String getMainGoalSpec() {
+        return mainGoalSpec;
     }
 
     public void setHolder(AnchorPane holder) {
@@ -38,8 +57,23 @@ public class ContentCell {
         return subGoals;
     }
 
-    private void selfUpdate(){
-        ((Label)holder.getChildren().get(1)).setText(date);
+    public void setMainGoalSpec(String mainGoalSpec) {
+        this.mainGoalSpec = mainGoalSpec;
+    }
 
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setSubGoals(ArrayList<String> subGoals) {
+        this.subGoals = subGoals;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

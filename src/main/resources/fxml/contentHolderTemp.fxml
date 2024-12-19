@@ -4,6 +4,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="134.4" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
@@ -13,12 +14,36 @@
             <Image url="@../img/contentHolder.png" />
          </image>
       </ImageView>
-      <Label alignment="TOP_RIGHT" layoutX="40.0" layoutY="5.0" text="Label" />
+      <Label alignment="CENTER" layoutX="9.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="20.0" text="99">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label alignment="TOP_RIGHT" layoutX="35.0" layoutY="5.0" text="24-10-10|24-88-99">
+         <font>
+            <Font size="10.0" />
+         </font></Label>
       <Label alignment="TOP_LEFT" layoutX="14.0" layoutY="34.0" prefHeight="52.0" prefWidth="106.0" text="MainGoal" wrapText="true" />
-      <Label layoutX="44.0" layoutY="89.0" prefHeight="15.0" prefWidth="83.0" text="1-subGoal">
+      <Label alignment="TOP_LEFT" layoutX="42.0" layoutY="90.0" prefHeight="9.0" prefWidth="84.0" text="1-subGoal">
          <font>
             <Font size="9.0" />
          </font>
       </Label>
+      <Label alignment="TOP_LEFT" layoutX="42.0" layoutY="101.0" prefHeight="9.0" prefWidth="84.0" text="2-subGoal">
+         <font>
+            <Font size="9.0" />
+         </font>
+      </Label>
+      <Label alignment="TOP_LEFT" layoutX="42.0" layoutY="113.0" prefHeight="9.0" prefWidth="84.0" text="3-subGoal">
+         <font>
+            <Font size="9.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="6.0" layoutY="96.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="34.0" text="99/99">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />
    </children>
 </AnchorPane>

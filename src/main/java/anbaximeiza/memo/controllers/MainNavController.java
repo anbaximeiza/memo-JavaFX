@@ -3,8 +3,6 @@ package anbaximeiza.memo.controllers;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.Key;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,16 +30,18 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.control.skin.ScrollPaneSkin;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class MainNavController implements Initializable{
 
     @FXML private ListView<String> projectList;
-    @FXML private AnchorPane toolPane;
+    @FXML private AnchorPane mainNavPane;
     @FXML private TextField nameInputTextField;
     @FXML private VBox messageBox;
     @FXML private TabPane contentDisplayPane;
@@ -52,6 +52,7 @@ public class MainNavController implements Initializable{
     HashSet<String> openedProjectSet;
     HashMap<String,Tab> projectTabMap;
     HashMap<String,ArrayList<ContentCell>> projectContentMap;
+    AnchorPane contentZoomUpPane;
     String previousName;
     PaneMaker paneMaker;
 
@@ -75,10 +76,18 @@ public class MainNavController implements Initializable{
                 }
             }
         );
+        try {
+            contentZoomUpPane=paneMaker.getContentCellZoomUp();
+            contentZoomUpPane.setVisible(false);
+            contentZoomUpPane.setLayoutX(202);
+            mainNavPane.getChildren().add(contentZoomUpPane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
 
      //When the plus sign on the top of the ListView is clicked
-    //need to work on further: create a new project space when the name is created
     public void addProjectList(String itemName){
         projectList.getItems().add(itemName);
         Tab contentPane = paneMaker.getContentTab(itemName);
@@ -199,6 +208,20 @@ public class MainNavController implements Initializable{
         GridPane selectedPane = (GridPane)tempPane.getContent();
         int temp = projectContentMap.get(currentTab.getText()).size();
         ContentCell ugood = paneMaker.getContentCell();
+        ugood.selfUpdate(selectedPane.getChildren().size()+1);
+        ((ImageView)ugood.getHolder().getChildren().get(0)).setId(currentTab.getText());
+        ugood.getHolder().getChildren().get(8).setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                AnchorPane selectedPane = (AnchorPane) ((Rectangle)event.getSource()).getParent();
+                String key = selectedPane.getChildren().get(0).getId();
+                int col = GridPane.getColumnIndex(selectedPane);
+                int row = GridPane.getRowIndex(selectedPane);
+                onContentDisplayCellClicked(projectContentMap.get(key).get(row*5+col));
+
+            }
+            
+        });
         if (temp%5 == 0){
             selectedPane.getRowConstraints().add(new RowConstraints(130));
             KeyFrame f1 = new KeyFrame(Duration.millis(80), e->setContentScrollBarVisAmount(tempPane));
@@ -225,5 +248,14 @@ public class MainNavController implements Initializable{
         currentPane.vvalueProperty().bindBidirectional(contentScrollBar.valueProperty());
         setContentScrollBarVisAmount(currentPane);
     }
-    
+
+
+    public void onContentDisplayCellClicked(ContentCell cc){
+        contentZoomUpPane.setVisible(true);
+
+        ((Label)contentZoomUpPane.getChildren().get(1)).setText("Created on: "+cc.getCreateDate());
+        ((Label)contentZoomUpPane.getChildren().get(2)).setText("To be completed on: "+cc.getEndDate());
+        ((Label)contentZoomUpPane.getChildren().get(4)).setText(cc.getMainGoal());
+        ((Label)contentZoomUpPane.getChildren().get(5)).setText(cc.getMainGoalSpec());
+    }
 }

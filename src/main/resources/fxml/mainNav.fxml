@@ -44,7 +44,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Ellipse?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="873.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anbaximeiza.memo.controllers.MainNavController">
+<AnchorPane fx:id="mainNavPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="873.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anbaximeiza.memo.controllers.MainNavController">
    <children>
       <VBox prefHeight="560.0" prefWidth="202.0">
          <children>
@@ -59,8 +59,7 @@
             <ListView fx:id="projectList" onEditCancel="#onCancelProjectName" onEditCommit="#onCancelProjectName" onMouseClicked="#onClickProjectName" prefHeight="540.0" prefWidth="202.0" />
          </children>
       </VBox>
-      <VBox fx:id="messageBox" alignment="BOTTOM_LEFT" layoutX="873.0" prefHeight="560.0" prefWidth="238.0" />
-      <TabPane fx:id="contentDisplayPane" layoutX="202.0" prefHeight="560.0" prefWidth="672.0" />
+      <TabPane fx:id="contentDisplayPane" layoutX="202.0" opacity="0.4" prefHeight="560.0" prefWidth="672.0" />
       <AnchorPane fx:id="plusSignPane" layoutX="241.0" layoutY="471.0" prefHeight="52.0" prefWidth="45.0" visible="false">
          <children>
             <Ellipse layoutX="23.0" layoutY="30.0" onMouseClicked="#onClickNewNote" radiusX="29.0" radiusY="30.0" stroke="TRANSPARENT" strokeType="INSIDE">
@@ -95,5 +94,6 @@
          </children>
       </AnchorPane>
       <ScrollBar fx:id="contentScrollBar" layoutX="858.0" layoutY="30.0" max="1.0" orientation="VERTICAL" prefHeight="530.0" prefWidth="14.0" style="-fx-background-color: transparent;" visible="false" />
+      <VBox fx:id="messageBox" alignment="BOTTOM_LEFT" layoutX="873.0" prefHeight="560.0" prefWidth="179.0" />
    </children>
 </AnchorPane>

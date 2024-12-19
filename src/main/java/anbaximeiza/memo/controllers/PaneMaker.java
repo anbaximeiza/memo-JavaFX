@@ -107,8 +107,12 @@ public class PaneMaker {
 
     public ContentCell getContentCell() throws MalformedURLException, IOException{
         LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd");
         String formattedDate = currentDate.format(formatter);
         return new ContentCell(getContentHolder(),formattedDate);
+    }
+
+    public AnchorPane getContentCellZoomUp() throws IOException{
+        return FXMLLoader.load(getClass().getResource("/fxml/contentCellZoomUp.fxml"));
     }
 }
