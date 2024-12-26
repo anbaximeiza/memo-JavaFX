@@ -59,7 +59,7 @@
             <ListView fx:id="projectList" onEditCancel="#onCancelProjectName" onEditCommit="#onCancelProjectName" onMouseClicked="#onClickProjectName" prefHeight="540.0" prefWidth="202.0" />
          </children>
       </VBox>
-      <TabPane fx:id="contentDisplayPane" layoutX="202.0" opacity="0.4" prefHeight="560.0" prefWidth="672.0" />
+      <TabPane fx:id="contentDisplayPane" layoutX="202.0" prefHeight="560.0" prefWidth="672.0" />
       <AnchorPane fx:id="plusSignPane" layoutX="241.0" layoutY="471.0" prefHeight="52.0" prefWidth="45.0" visible="false">
          <children>
             <Ellipse layoutX="23.0" layoutY="30.0" onMouseClicked="#onClickNewNote" radiusX="29.0" radiusY="30.0" stroke="TRANSPARENT" strokeType="INSIDE">

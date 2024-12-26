@@ -9,35 +9,39 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane layoutY="29.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.4" prefWidth="672.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane layoutY="29.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.4" prefWidth="672.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fitHeight="553.0" fitWidth="531.0" layoutX="71.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="115.0" fitWidth="173.0" layoutX="544.0" layoutY="133.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/contentHolder.png" />
          </image>
       </ImageView>
-      <Label layoutX="205.0" layoutY="14.0" text="Created on: yyyy/MM/dd">
+      <Label layoutX="7.0" layoutY="3.0" text="Created on: yyyy/MM/dd">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="205.0" layoutY="38.0" text="To be completed on: yyyy/MM/dd">
+      <Label layoutX="7.0" layoutY="27.0" text="Deadline: yyyy/MM/dd">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button layoutX="510.0" layoutY="39.0" mnemonicParsing="false" text="Re-select" />
-      <Label alignment="TOP_LEFT" layoutX="100.0" layoutY="133.0" prefHeight="24.0" prefWidth="471.0" text="Main goal title">
+      <Button layoutX="412.0" layoutY="15.0" mnemonicParsing="false" text="Re-select" />
+      <Label alignment="TOP_LEFT" layoutX="7.0" layoutY="51.0" prefHeight="24.0" prefWidth="471.0" text="Main goal title">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label alignment="TOP_LEFT" layoutX="105.0" layoutY="157.0" prefHeight="162.0" prefWidth="458.0" text="Main goal specification" />
-      <ScrollPane fitToWidth="true" layoutX="237.0" layoutY="382.0" prefHeight="134.0" prefWidth="350.0">
+      <Label alignment="TOP_LEFT" layoutX="8.0" layoutY="75.0" prefHeight="162.0" prefWidth="458.0" style="-fx-border-color: blue;" text="Main goal specification" />
+      <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="286.0" prefHeight="134.0" prefWidth="350.0">
          <content>
             <VBox prefHeight="134.0" prefWidth="351.0" />
          </content>
       </ScrollPane>
+      <ImageView fitHeight="36.0" fitWidth="38.0" layoutX="623.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/close_icon.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

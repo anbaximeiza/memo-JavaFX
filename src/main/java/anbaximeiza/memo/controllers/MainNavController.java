@@ -14,6 +14,7 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -55,6 +56,7 @@ public class MainNavController implements Initializable{
     AnchorPane contentZoomUpPane;
     String previousName;
     PaneMaker paneMaker;
+    ContentCell selectedCell;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -81,6 +83,13 @@ public class MainNavController implements Initializable{
             contentZoomUpPane.setVisible(false);
             contentZoomUpPane.setLayoutX(202);
             mainNavPane.getChildren().add(contentZoomUpPane);
+            contentZoomUpPane.getChildren().get(7).setOnMouseClicked(new EventHandler<Event>() {
+                @Override
+                public void handle(Event event) {
+                   onContentDisplayCellClose();
+                }
+                
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -217,7 +226,8 @@ public class MainNavController implements Initializable{
                 String key = selectedPane.getChildren().get(0).getId();
                 int col = GridPane.getColumnIndex(selectedPane);
                 int row = GridPane.getRowIndex(selectedPane);
-                onContentDisplayCellClicked(projectContentMap.get(key).get(row*5+col));
+                selectedCell = projectContentMap.get(key).get(row*5+col);
+                onContentDisplayCellClicked();
 
             }
             
@@ -250,12 +260,23 @@ public class MainNavController implements Initializable{
     }
 
 
-    public void onContentDisplayCellClicked(ContentCell cc){
+    public void onContentDisplayCellClose(){
+        selectedCell.setEndDate(((Label)contentZoomUpPane.getChildren().get(2)).getText());
+        selectedCell.setMainGoal(((Label)contentZoomUpPane.getChildren().get(4)).getText());
+        selectedCell.setMainGoalSpec(((Label)contentZoomUpPane.getChildren().get(5)).getText());
+
+        contentZoomUpPane.setVisible(false);
+    }
+
+    //1.created date    2.deadline      3.reset button      4.main goal title
+    //5.main goal specification     6.Scrollpane for sub goals      7.ImageView close icon
+
+    public void onContentDisplayCellClicked(){
         contentZoomUpPane.setVisible(true);
 
-        ((Label)contentZoomUpPane.getChildren().get(1)).setText("Created on: "+cc.getCreateDate());
-        ((Label)contentZoomUpPane.getChildren().get(2)).setText("To be completed on: "+cc.getEndDate());
-        ((Label)contentZoomUpPane.getChildren().get(4)).setText(cc.getMainGoal());
-        ((Label)contentZoomUpPane.getChildren().get(5)).setText(cc.getMainGoalSpec());
+        ((Label)contentZoomUpPane.getChildren().get(1)).setText("Created on: "+selectedCell.getCreateDate());
+        ((Label)contentZoomUpPane.getChildren().get(2)).setText("Deadline: "+selectedCell.getEndDate());
+        ((Label)contentZoomUpPane.getChildren().get(4)).setText(selectedCell.getMainGoal());
+        ((Label)contentZoomUpPane.getChildren().get(5)).setText(selectedCell.getMainGoalSpec());
     }
 }
