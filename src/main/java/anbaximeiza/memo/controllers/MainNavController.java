@@ -169,6 +169,24 @@ public class MainNavController implements Initializable{
         });
         Platform.runLater(()->{
             resetProjectCellListener(projectCell);
+            EventHandler<Event> temp = new EventHandler<Event>() {
+                @Override
+                public void handle(Event event) {
+                    String key = "";
+                    try {
+                        key = ((AnchorPane)event.getSource()).getId();
+                    } catch (Exception e) {
+                        key = ((Label)event.getSource()).getText();
+                    }
+                    //only add when the tab is not opened otherwise could trigger null pointer
+                    if (!openedProjectSet.contains(key)){
+                        contentDisplayPane.getTabs().add(projectTabMap.get(key));
+                        openedProjectSet.add(key);
+                    }
+                }
+            };
+            projectCell.setOnMouseClicked(temp);
+            projectCell.getChildren().get(0).setOnMouseClicked(temp);
         });
 
         projectTabMap.put(itemName, contentPane);
@@ -293,6 +311,7 @@ public class MainNavController implements Initializable{
             }
             projectNameSet.remove(previousName);
             projectTabMap.put(newName, projectTabMap.remove(previousName));
+            projectTabMap.get(newName).setText(newName);
             projectNameSet.add(newName);
             //update on the cell
             cell.setId(newName);
