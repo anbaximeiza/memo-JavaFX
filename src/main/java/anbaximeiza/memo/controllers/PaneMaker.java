@@ -115,4 +115,11 @@ public class PaneMaker {
     public AnchorPane getContentCellZoomUp() throws IOException{
         return FXMLLoader.load(getClass().getResource("/fxml/contentCellZoomUp.fxml"));
     }
+
+    public AnchorPane getNewProjectCell(String name) throws IOException{
+        AnchorPane result = FXMLLoader.load(getClass().getResource("/fxml/projectCell.fxml"));
+        ((Label)result.getChildren().get(0)).setText(name);
+        result.setId(name);
+        return result;
+    }
 }

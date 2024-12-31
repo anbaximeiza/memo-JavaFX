@@ -32,8 +32,8 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -48,7 +48,7 @@
    <children>
       <VBox prefHeight="560.0" prefWidth="202.0">
          <children>
-            <AnchorPane fx:id="toolPane" prefHeight="39.0" prefWidth="202.0" style="-fx-background-color: grey;">
+            <AnchorPane fx:id="toolPane" prefHeight="30.0" prefWidth="202.0" style="-fx-background-color: grey;">
                <children>
                   <ImageView fitHeight="30.0" fitWidth="27.0" layoutX="7.0" layoutY="1.0" onMouseClicked="#createNewProjectName" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -56,7 +56,11 @@
                      </image>
                   </ImageView>
                </children></AnchorPane>
-            <ListView fx:id="projectList" onEditCancel="#onCancelProjectName" onEditCommit="#onCancelProjectName" onMouseClicked="#onClickProjectName" prefHeight="540.0" prefWidth="202.0" />
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="534.0" prefWidth="202.0" vbarPolicy="NEVER">
+               <content>
+                  <VBox fx:id="projectList" prefHeight="530.0" prefWidth="209.0" />
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
       <TabPane fx:id="contentDisplayPane" layoutX="202.0" prefHeight="560.0" prefWidth="672.0" />

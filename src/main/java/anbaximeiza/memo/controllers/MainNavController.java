@@ -3,6 +3,7 @@ package anbaximeiza.memo.controllers;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import anbaximeiza.memo.ContentCell;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -31,7 +33,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.control.skin.ScrollPaneSkin;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -41,22 +47,38 @@ import javafx.util.Duration;
 
 public class MainNavController implements Initializable{
 
-    @FXML private ListView<String> projectList;
+    @FXML private VBox projectList;
     @FXML private AnchorPane mainNavPane;
-    @FXML private TextField nameInputTextField;
     @FXML private VBox messageBox;
     @FXML private TabPane contentDisplayPane;
     @FXML private AnchorPane plusSignPane;
     @FXML private ScrollBar contentScrollBar;
 
+    //use for storing the projects
     HashSet<String> projectNameSet;
-    HashSet<String> openedProjectSet;
     HashMap<String,Tab> projectTabMap;
     HashMap<String,ArrayList<ContentCell>> projectContentMap;
+
+    //for the project that is opened
+    HashSet<String> openedProjectSet;
+
+    //display pane on the right of the application
     AnchorPane contentZoomUpPane;
-    String previousName;
+
+    //helper class for generating the panes
     PaneMaker paneMaker;
+
+    //when a cell in the content display pane is clicked, it becomes the selected cell
+    //mainly use for displaying on the zoomUp pane atm
     ContentCell selectedCell;
+
+    //use for the project name cells
+    AnchorPane currentEditing;
+    AnchorPane currentDeleting;
+    EventHandler<KeyEvent> projectEditHandlerKey;
+    EventHandler<Event> projectEditHandler;
+    EventHandler<Event> projectDeleteHandler;
+    @FXML Label deletionWarning;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -93,13 +115,47 @@ public class MainNavController implements Initializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        projectEditHandlerKey =  new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals(KeyCode.ENTER)){
+                    onFinishProjectName(currentEditing);
+                }
+            }   
+        };
+
+        projectEditHandler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                onFinishProjectName(currentEditing);
+            }
+            
+        };
+
+        projectDeleteHandler = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                projectList.getChildren().remove(currentDeleting);
+                String key = currentDeleting.getId();
+                projectTabMap.remove(key);
+                projectContentMap.remove(key);
+                projectNameSet.remove(key);
+                openedProjectSet.remove(key);
+                currentDeleting = null;
+            }
+            
+        };
         
     }
 
-     //When the plus sign on the top of the ListView is clicked
-    public void addProjectList(String itemName){
-        projectList.getItems().add(itemName);
+    //Actual logic of the function beneath
+    public void addProjectList(String itemName) throws IOException{
+        //generate new panes from the pane maker
+        AnchorPane projectCell = paneMaker.getNewProjectCell(itemName);
+        projectList.getChildren().add(projectCell);
         Tab contentPane = paneMaker.getContentTab(itemName);
+
         contentPane.setOnClosed(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
@@ -111,18 +167,49 @@ public class MainNavController implements Initializable{
             }
         
         });
+        Platform.runLater(()->{
+            resetProjectCellListener(projectCell);
+        });
+
         projectTabMap.put(itemName, contentPane);
         projectContentMap.put(itemName, new ArrayList<ContentCell>());
         
     }
 
-    public void createNewProjectName(){
-        projectList.setEditable(true);
-        projectList.setCellFactory(TextFieldListCell.forListView());
+    //When the plus sign on the top of the ListView is clicked
+    public void createNewProjectName() throws IOException{
         addProjectList(getDefaultName());
-        projectList.scrollTo(projectList.getItems().size()-1);
     }
 
+    //reset the cell to initial state
+    public void resetProjectCellListener(AnchorPane cell){
+        //remove the 
+        if (currentEditing!=null && currentEditing.equals(cell)){
+            currentEditing.removeEventHandler(KeyEvent.KEY_PRESSED, projectEditHandlerKey);
+            currentEditing.getChildren().get(4).removeEventHandler(MouseEvent.MOUSE_CLICKED, projectEditHandler);
+        }
+        if (currentDeleting!=null && currentDeleting.equals(cell)){
+            currentDeleting.getChildren().get(4).removeEventHandler(MouseEvent.MOUSE_CLICKED, projectDeleteHandler);
+        }
+        cell.getChildren().get(6).setVisible(false);
+        cell.getChildren().get(1).setVisible(false);
+        iconChange((ImageView)cell.getChildren().get(2),"rename");
+        iconChange((ImageView)cell.getChildren().get(3),"delete");
+        cell.getChildren().get(4).setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                AnchorPane parent = (AnchorPane) ((Node)event.getSource()).getParent();
+                onRenameButtonClick(parent);
+            }
+        });
+        cell.getChildren().get(5).setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                AnchorPane parent = (AnchorPane) ((Node)event.getSource()).getParent();
+                onDeleteButtonClick(parent);
+            }
+        });
+    }
 
     //generate a default name
     public String getDefaultName(){
@@ -134,49 +221,85 @@ public class MainNavController implements Initializable{
         return "Untitled-" + String.valueOf(temp);
     }
 
+    //0: Label project name     1:TextField     2:ImageView rename_icon
+    //3: ImageView delete_icon      4:Rectangle for rename      5:Rectangle for delete
+
+    public void onRenameButtonClick(AnchorPane clicked){
+        if (currentEditing!=null){
+            resetProjectCellListener(currentEditing);
+        }
+        if (currentDeleting!= null){
+            resetProjectCellListener(currentDeleting);
+            currentDeleting = null;
+        }
+        currentEditing = clicked;
+        clicked.getChildren().get(1).setVisible(true);
+        ((TextField)clicked.getChildren().get(1)).setText(clicked.getId());
+        iconChange((ImageView)clicked.getChildren().get(2),"yes");
+        iconChange((ImageView)clicked.getChildren().get(3),"undo");
+        clicked.getChildren().get(4).setOnMouseClicked(projectEditHandler);
+        clicked.setOnKeyPressed(projectEditHandlerKey);
+        clicked.getChildren().get(5).setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                resetProjectCellListener(currentEditing);
+                currentEditing.getChildren().get(5).removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
+            }
+        });
+    }
+
+    public void onDeleteButtonClick(AnchorPane clicked){
+        if (currentEditing!=null){
+            resetProjectCellListener(currentEditing);
+            currentEditing = null;
+        }
+        //button being clicked again
+        if (currentDeleting!=null && currentDeleting.equals(clicked)){
+            resetProjectCellListener(currentDeleting);
+            currentDeleting = null;
+            return;
+        }
+        if (currentDeleting != null){
+           resetProjectCellListener(currentDeleting);
+        }
+        currentDeleting =clicked;
+        iconChange((ImageView)clicked.getChildren().get(2),"yes");
+        clicked.getChildren().get(6).setVisible(true);
+        clicked.getChildren().get(4).setOnMouseClicked(projectDeleteHandler);
+
+    }
+
+    public void iconChange(ImageView node, String imgName){
+        Image buffer= new Image(getClass().getResourceAsStream("/img/"+ imgName+"_icon.png"));
+        node.setImage(buffer);
+    }
+
     //when the user exit editing the name
     //planning to only allow user to edit the name when the tab is opened
-    public void onCancelProjectName(ListView.EditEvent<String> event){
-        String newName = event.getNewValue();
-        if (newName==null){//when no change is detected
-            projectList.getItems().set(event.getIndex(), previousName);
+    public void onFinishProjectName(AnchorPane cell){
+        String previousName = cell.getId();
+        String newName = ((TextField)cell.getChildren().get(1)).getText();
+        if (newName.equals(previousName)){//when no change is detected
+            resetProjectCellListener(cell);
             return;
-        }
-        if (newName.strip().equals("")) {
+        }else if (newName.strip().equals("")) {
             displayMessage("Name must not be all space!", MessageType.ERROR);
-            projectList.getItems().set(event.getIndex(), previousName);
-            return;
-        }
-        if (projectNameSet.contains(newName)){
+        }else if (projectNameSet.contains(newName)){
             displayMessage("Name already exists!", MessageType.ERROR);
-            projectList.getItems().set(event.getIndex(), previousName);
-        } else{
+        } else{//new name accepted
             if (openedProjectSet.contains(previousName)){
                 openedProjectSet.remove(previousName);
                 openedProjectSet.add(newName);
             }
             projectNameSet.remove(previousName);
             projectTabMap.put(newName, projectTabMap.remove(previousName));
-            projectList.getItems().set(event.getIndex(), newName);
             projectNameSet.add(newName);
-            
+            //update on the cell
+            cell.setId(newName);
+            ((Label)cell.getChildren().get(0)).setText(newName);
         }
-    }
-
-    //When the ListView for displaying the project names is clicked
-    //save the previous name so it can be restored
-    public void onClickProjectName(){
-        previousName = projectList.getSelectionModel().getSelectedItem();
-        if (previousName == null){
-            return;
-        }
-        plusSignPane.setVisible(true);
-        if (!openedProjectSet.contains(previousName)){
-            Tab temp = projectTabMap.get(previousName);
-            contentDisplayPane.getTabs().add(temp);
-            openedProjectSet.add(previousName);
-        }
-
+        resetProjectCellListener(cell);
+        currentEditing = null;
     }
 
 
