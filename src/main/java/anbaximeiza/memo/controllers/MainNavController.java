@@ -182,6 +182,7 @@ public class MainNavController implements Initializable{
                     if (!openedProjectSet.contains(key)){
                         contentDisplayPane.getTabs().add(projectTabMap.get(key));
                         openedProjectSet.add(key);
+                        plusSignPane.setVisible(true);
                     }
                 }
             };
@@ -403,7 +404,7 @@ public class MainNavController implements Initializable{
 
 
     public void onContentDisplayCellClose(){
-        selectedCell.setEndDate(((Label)contentZoomUpPane.getChildren().get(2)).getText());
+        selectedCell.setEndDate(((Label)contentZoomUpPane.getChildren().get(2)).getText().replaceFirst("^Deadline: ",""));
         selectedCell.setMainGoal(((Label)contentZoomUpPane.getChildren().get(4)).getText());
         selectedCell.setMainGoalSpec(((Label)contentZoomUpPane.getChildren().get(5)).getText());
 
@@ -412,7 +413,6 @@ public class MainNavController implements Initializable{
 
     //1.created date    2.deadline      3.reset button      4.main goal title
     //5.main goal specification     6.Scrollpane for sub goals      7.ImageView close icon
-
     public void onContentDisplayCellClicked(){
         contentZoomUpPane.setVisible(true);
 
