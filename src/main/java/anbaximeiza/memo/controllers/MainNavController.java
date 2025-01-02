@@ -3,7 +3,6 @@ package anbaximeiza.memo.controllers;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,32 +15,28 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.control.skin.ScrollPaneSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
@@ -169,15 +164,12 @@ public class MainNavController implements Initializable{
         });
         Platform.runLater(()->{
             resetProjectCellListener(projectCell);
+
+            //handler when the project cell is clicked
             EventHandler<Event> temp = new EventHandler<Event>() {
                 @Override
                 public void handle(Event event) {
-                    String key = "";
-                    try {
-                        key = ((AnchorPane)event.getSource()).getId();
-                    } catch (Exception e) {
-                        key = ((Label)event.getSource()).getText();
-                    }
+                    String key = ((Label)event.getSource()).getParent().getId();
                     //only add when the tab is not opened otherwise could trigger null pointer
                     if (!openedProjectSet.contains(key)){
                         contentDisplayPane.getTabs().add(projectTabMap.get(key));
@@ -186,8 +178,30 @@ public class MainNavController implements Initializable{
                     }
                 }
             };
-            projectCell.setOnMouseClicked(temp);
+
+            //handler when the buttons are hovered
+            EventHandler<Event> tt = new EventHandler<Event>() {
+                @Override
+                public void handle(Event event) {
+                    ((Rectangle)event.getSource()).setOpacity(0.6);
+                }
+                
+            };
+
+            //handler when the buttons are unhovered (no specific meaning on naming)
+            EventHandler<Event> tte = new EventHandler<Event>() {
+                @Override
+                public void handle(Event event) {
+                    ((Rectangle)event.getSource()).setOpacity(0);
+                }
+                            
+            };
             projectCell.getChildren().get(0).setOnMouseClicked(temp);
+            projectCell.getChildren().get(6).setOnMouseClicked(temp);
+            projectCell.getChildren().get(4).setOnMouseEntered(tt);
+            projectCell.getChildren().get(5).setOnMouseEntered(tt);
+            projectCell.getChildren().get(4).setOnMouseExited(tte);
+            projectCell.getChildren().get(5).setOnMouseExited(tte);
         });
 
         projectTabMap.put(itemName, contentPane);
@@ -210,7 +224,7 @@ public class MainNavController implements Initializable{
         if (currentDeleting!=null && currentDeleting.equals(cell)){
             currentDeleting.getChildren().get(4).removeEventHandler(MouseEvent.MOUSE_CLICKED, projectDeleteHandler);
         }
-        cell.getChildren().get(6).setVisible(false);
+        cell.getChildren().get(6).setOpacity(0);;
         cell.getChildren().get(1).setVisible(false);
         iconChange((ImageView)cell.getChildren().get(2),"rename");
         iconChange((ImageView)cell.getChildren().get(3),"delete");
@@ -283,7 +297,7 @@ public class MainNavController implements Initializable{
         }
         currentDeleting =clicked;
         iconChange((ImageView)clicked.getChildren().get(2),"yes");
-        clicked.getChildren().get(6).setVisible(true);
+        clicked.getChildren().get(6).setOpacity(1);
         clicked.getChildren().get(4).setOnMouseClicked(projectDeleteHandler);
 
     }
@@ -343,7 +357,6 @@ public class MainNavController implements Initializable{
     public void displayMessage(String message, MessageType type ){
         AnchorPane messagePane = paneMaker.getAnchorPane(message, type);
         messageBox.getChildren().add(messagePane);
-
         KeyFrame f1 = new KeyFrame(Duration.millis(0), e -> messageSlideIn(messagePane));
         KeyFrame f2 = new KeyFrame(Duration.millis(1500), e -> messageSlideOut(messagePane));
         KeyFrame f3 = new KeyFrame(Duration.millis(1850), e -> messageBox.getChildren().remove(0));
@@ -370,7 +383,12 @@ public class MainNavController implements Initializable{
                 int col = GridPane.getColumnIndex(selectedPane);
                 int row = GridPane.getRowIndex(selectedPane);
                 selectedCell = projectContentMap.get(key).get(row*5+col);
-                onContentDisplayCellClicked();
+                try {
+                    onContentDisplayCellClicked();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
             }
             
@@ -413,12 +431,14 @@ public class MainNavController implements Initializable{
 
     //1.created date    2.deadline      3.reset button      4.main goal title
     //5.main goal specification     6.Scrollpane for sub goals      7.ImageView close icon
-    public void onContentDisplayCellClicked(){
+    public void onContentDisplayCellClicked() throws IOException{
         contentZoomUpPane.setVisible(true);
 
         ((Label)contentZoomUpPane.getChildren().get(1)).setText("Created on: "+selectedCell.getCreateDate());
         ((Label)contentZoomUpPane.getChildren().get(2)).setText("Deadline: "+selectedCell.getEndDate());
         ((Label)contentZoomUpPane.getChildren().get(4)).setText(selectedCell.getMainGoal());
         ((Label)contentZoomUpPane.getChildren().get(5)).setText(selectedCell.getMainGoalSpec());
+        VBox subGoalBox = (VBox) ((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent();
+        paneMaker.loadSubGoalVBox(subGoalBox, selectedCell);
     }
 }

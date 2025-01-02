@@ -12,6 +12,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Random;
 
 import anbaximeiza.memo.ContentCell;;
@@ -121,5 +123,24 @@ public class PaneMaker {
         ((Label)result.getChildren().get(0)).setText(name);
         result.setId(name);
         return result;
+    }
+
+    public AnchorPane getSubGoalCell(String name) throws IOException{
+        AnchorPane result = FXMLLoader.load(getClass().getResource("/fxml/subGoalCell.fxml"));
+        ((Label)result.getChildren().get(0)).setText(name);
+        result.setId(name);
+        return result;
+    }
+
+    public void loadSubGoalVBox(VBox holder, ContentCell cell) throws IOException{
+        ArrayList<String> temp = cell.getSubGoals();
+        if (temp.size()==0){
+            return;
+        }
+        AnchorPane[] result = new AnchorPane[temp.size()];
+        for(int i = 0; i< temp.size(); i++){
+           result[0] = getSubGoalCell(temp.get(i));
+        }
+        holder.getChildren().addAll(result);
     }
 }

@@ -33,9 +33,9 @@
          </font>
       </Label>
       <Label alignment="TOP_LEFT" layoutX="8.0" layoutY="75.0" prefHeight="162.0" prefWidth="458.0" style="-fx-border-color: blue;" text="Main goal specification" />
-      <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="286.0" prefHeight="134.0" prefWidth="350.0">
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="13.0" layoutY="280.0" prefHeight="172.0" prefWidth="458.0" vbarPolicy="NEVER">
          <content>
-            <VBox prefHeight="134.0" prefWidth="351.0" />
+            <VBox prefHeight="172.0" prefWidth="457.0" />
          </content>
       </ScrollPane>
       <ImageView fitHeight="36.0" fitWidth="38.0" layoutX="623.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
