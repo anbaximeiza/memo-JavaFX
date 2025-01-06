@@ -20,11 +20,13 @@ public class ContentCell {
 
     public ContentCell(AnchorPane holder){
         this.holder = holder;
+        subGoals = new ArrayList<>();
     }
 
     public ContentCell(AnchorPane holder, String createDate){
         this.holder = holder;
         this.createDate = createDate;
+        subGoals = new ArrayList<>();
     }
 
     public void selfUpdate(int index){
