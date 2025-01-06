@@ -3,6 +3,8 @@ package anbaximeiza.memo.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -11,15 +13,14 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 public class SubGoalController implements Initializable{
 
@@ -47,6 +48,11 @@ public class SubGoalController implements Initializable{
                     ((VBox)temp).getChildren().remove(root);
                }
         };
+        KeyFrame f1 = new KeyFrame(Duration.millis(100), e->{
+            priority = root.getId();
+        });
+        Timeline tl = new Timeline(f1);
+        tl.play();
     }
     
     public void onLeftImageClicked(){
@@ -57,6 +63,7 @@ public class SubGoalController implements Initializable{
         priority = ((Node)e.getSource()).getId();
         iconChange(leftImage, priority);
         priorityLabel.setText("current: "+ priority);
+        root.setId(priority);
         priorityPane.setVisible(false);
     }
 
@@ -95,6 +102,8 @@ public class SubGoalController implements Initializable{
             iconChange(leftImage, priority);
             leftLabel.setText("Priority");
             rightLabel.setText("Delete");
+            leftImage.removeEventHandler(MouseEvent.MOUSE_CLICKED, temp);
+            leftImage.removeEventHandler(MouseEvent.MOUSE_CLICKED, temp);
         }
     }    
 

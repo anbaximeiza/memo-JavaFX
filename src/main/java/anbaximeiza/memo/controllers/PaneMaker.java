@@ -143,16 +143,15 @@ public class PaneMaker {
         AnchorPane result = FXMLLoader.load(getClass().getResource("/fxml/subGoalCell.fxml"));
         ((Label)result.getChildren().get(1)).setText(content);
         ((CheckBox)result.getChildren().get(2)).setSelected(selected);
+        ((Label)((AnchorPane)result.getChildren().get(7)).getChildren().get(6)).setText("current: "+priority);
         Image temp =  new Image(getClass().getResourceAsStream("/img/"+ priority+"_icon.png"));
         ((ImageView)result.getChildren().get(4)).setImage(temp);
-        if (selected){
-            result.getChildren().get(1).setId("1");
-        } else{
-            result.getChildren().get(1).setId("0");
-        }
+        result.setId(priority);
         return result;
     }
 
+
+    //used to load existing record
     public void loadSubGoalVBox(VBox holder, ContentCell cell) throws IOException{
         ArrayList<SubGoal> temp = cell.getSubGoals();
         if (temp.size()==0){
