@@ -13,7 +13,7 @@ public class ContentCell {
     private AnchorPane holder;
     private String mainGoal = "Deafult";
     private String mainGoalSpec = "Deafult";
-    private ArrayList<String> subGoals;
+    private ArrayList<SubGoal> subGoals;
     //colors
     private String createDate;
     private String endDate = "null";
@@ -53,7 +53,7 @@ public class ContentCell {
     public void setMainGoal(String mainGoal) {
         this.mainGoal = mainGoal;
     }
-    public ArrayList<String> getSubGoals() {
+    public ArrayList<SubGoal> getSubGoals() {
         return subGoals;
     }
 
@@ -69,7 +69,7 @@ public class ContentCell {
         return endDate;
     }
 
-    public void setSubGoals(ArrayList<String> subGoals) {
+    public void setSubGoals(ArrayList<SubGoal> subGoals) {
         this.subGoals = subGoals;
     }
 
