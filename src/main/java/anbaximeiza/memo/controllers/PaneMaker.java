@@ -2,18 +2,18 @@ package anbaximeiza.memo.controllers;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.io.IOException;
@@ -23,7 +23,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Random;
 
-import anbaximeiza.memo.ContentCell;;
+import anbaximeiza.memo.ContentCell;
+import anbaximeiza.memo.SubGoal;;
 
 enum MessageType {
     ERROR,
@@ -125,15 +126,35 @@ public class PaneMaker {
         return result;
     }
 
-    public AnchorPane getSubGoalCell(String name) throws IOException{
+    public AnchorPane getSubGoalCell(SubGoal goal) throws IOException{
+        String content;
+        Boolean selected;
+        String priority;
+        if (goal == null){
+            content = "double click to edit...";
+            selected = false;
+            priority = "4";
+        } else {
+            content = goal.getContent();
+            selected = goal.getCompleted();
+            priority = Integer.toString(goal.getPriority());
+        }
+
         AnchorPane result = FXMLLoader.load(getClass().getResource("/fxml/subGoalCell.fxml"));
-        ((Label)result.getChildren().get(0)).setText(name);
-        result.setId(name);
+        ((Label)result.getChildren().get(1)).setText(content);
+        ((CheckBox)result.getChildren().get(2)).setSelected(selected);
+        Image temp =  new Image(getClass().getResourceAsStream("/img/"+ priority+"_icon.png"));
+        ((ImageView)result.getChildren().get(4)).setImage(temp);
+        if (selected){
+            result.getChildren().get(1).setId("1");
+        } else{
+            result.getChildren().get(1).setId("0");
+        }
         return result;
     }
 
     public void loadSubGoalVBox(VBox holder, ContentCell cell) throws IOException{
-        ArrayList<String> temp = cell.getSubGoals();
+        ArrayList<SubGoal> temp = cell.getSubGoals();
         if (temp.size()==0){
             return;
         }
