@@ -424,6 +424,8 @@ public class MainNavController implements Initializable{
         selectedCell.setMainGoal(((Label)contentZoomUpPane.getChildren().get(4)).getText());
         selectedCell.setMainGoalSpec(((Label)contentZoomUpPane.getChildren().get(5)).getText());
 
+        //remove all the subgoals within the subgoal display
+        ((VBox)((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent()).getChildren().clear();
         contentZoomUpPane.setVisible(false);
     }
 
