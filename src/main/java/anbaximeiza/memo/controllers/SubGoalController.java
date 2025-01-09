@@ -34,20 +34,13 @@ public class SubGoalController implements Initializable{
     @FXML AnchorPane priorityPane;
         @FXML Label priorityLabel;
     @FXML TextArea contentEditingEntry;
+    @FXML ImageView confirmImage;
 
     String priority;
     Boolean delete = false;
-    EventHandler<Event> temp;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        temp = new EventHandler<Event>() {
-            @Override
-            public void handle(Event event) {
-               Node temp = root.getParent();
-                    ((VBox)temp).getChildren().remove(root);
-               }
-        };
         KeyFrame f1 = new KeyFrame(Duration.millis(100), e->{
             priority = root.getId();
         });
@@ -96,15 +89,20 @@ public class SubGoalController implements Initializable{
             iconChange(leftImage, "yes");
             leftLabel.setText("Confirm?");
             rightLabel.setText("Cancel");
-            leftImage.setOnMouseClicked(temp);
+            confirmImage.setVisible(true);
         } else {
             delete = false;
             iconChange(leftImage, priority);
             leftLabel.setText("Priority");
             rightLabel.setText("Delete");
-            leftImage.removeEventHandler(MouseEvent.MOUSE_CLICKED, temp);
-            leftImage.removeEventHandler(MouseEvent.MOUSE_CLICKED, temp);
+
+            confirmImage.setVisible(false);
         }
     }    
+
+    public void onConfirmImageClicked(){
+        Node temp = root.getParent();
+        ((VBox)temp).getChildren().remove(root);
+    }
 
 }
