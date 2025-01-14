@@ -71,11 +71,15 @@ public class ContentCell {
         return endDate;
     }
 
-    public void setSubGoals(ArrayList<SubGoal> subGoals) {
-        this.subGoals = subGoals;
+    public void appendSubGoals(SubGoal newSG) {
+        this.subGoals.add(newSG);
     }
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public void setCreatetDate(String createDate) {
+        this.createDate = createDate;
     }
 }

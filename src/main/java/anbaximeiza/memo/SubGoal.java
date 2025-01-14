@@ -12,6 +12,11 @@ public class SubGoal {
         priority = 4; //default value;
     }
 
+    public SubGoal(int priority, Boolean completed){
+        this.priority = priority;
+        this.completed = completed;
+    }
+
     public String getContent() {
         return content;
     }
