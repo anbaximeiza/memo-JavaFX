@@ -110,7 +110,7 @@ public class PaneMaker {
 
     public ContentCell getContentCell() throws MalformedURLException, IOException{
         LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy");
         String formattedDate = currentDate.format(formatter);
         return new ContentCell(getContentHolder(),formattedDate);
     }

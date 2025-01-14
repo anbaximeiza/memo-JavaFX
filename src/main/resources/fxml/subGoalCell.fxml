@@ -12,7 +12,7 @@
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="68.0" prefWidth="457.0" style="-fx-border-color: black; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anbaximeiza.memo.controllers.SubGoalController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="68.0" layoutX="342.0" stroke="BLACK" strokeType="INSIDE" width="115.0" />
-      <Label fx:id="contentLabel" alignment="TOP_LEFT" layoutX="4.0" layoutY="3.0" maxWidth="-Infinity" minHeight="50.0" minWidth="-Infinity" onMouseClicked="#onContentLabelClicked" prefHeight="62.0" prefWidth="340.0" text="Label">
+      <Label fx:id="contentLabel" alignment="TOP_LEFT" ellipsisString=":?" layoutX="4.0" layoutY="3.0" maxWidth="-Infinity" minHeight="50.0" minWidth="-Infinity" onMouseClicked="#onContentLabelClicked" prefHeight="62.0" prefWidth="340.0" text="Label" wrapText="true">
          <font>
             <Font size="15.0" />
          </font>
@@ -61,7 +61,7 @@
             <Label fx:id="priorityLabel" layoutX="28.0" layoutY="19.0" text="current: 4" />
          </children>
       </AnchorPane>
-      <TextArea fx:id="contentEditingEntry" layoutX="2.0" layoutY="4.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="340.0" visible="false" />
+      <TextArea fx:id="contentEditingEntry" layoutX="2.0" layoutY="4.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="340.0" visible="false" wrapText="true" />
       <ImageView fx:id="confirmImage" fitHeight="25.0" fitWidth="19.0" layoutX="362.0" layoutY="32.0" onMouseClicked="#onConfirmImageClicked" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../img/yes_icon.png" />

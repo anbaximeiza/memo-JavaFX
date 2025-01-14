@@ -487,6 +487,7 @@ public class MainNavController implements Initializable{
         selectedCell.setMainGoal(((Label)contentZoomUpPane.getChildren().get(4)).getText());
         selectedCell.setMainGoalSpec(((Label)contentZoomUpPane.getChildren().get(5)).getText());
 
+        //empty the list first
         selectedCell.clearSubGoals();
 
         ObservableList<Node> subGoalList = ((VBox) ((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent()).getChildren();
