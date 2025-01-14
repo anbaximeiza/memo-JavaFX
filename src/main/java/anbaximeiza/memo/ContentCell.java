@@ -75,6 +75,10 @@ public class ContentCell {
         this.subGoals.add(newSG);
     }
 
+    public void clearSubGoals(){
+        this.subGoals.clear();
+    }
+
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }

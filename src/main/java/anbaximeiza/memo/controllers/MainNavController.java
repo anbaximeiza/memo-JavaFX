@@ -10,17 +10,20 @@ import java.util.ResourceBundle;
 
 import anbaximeiza.memo.ContentCell;
 import anbaximeiza.memo.FileHandler;
+import anbaximeiza.memo.SubGoal;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
@@ -484,9 +487,24 @@ public class MainNavController implements Initializable{
         selectedCell.setMainGoal(((Label)contentZoomUpPane.getChildren().get(4)).getText());
         selectedCell.setMainGoalSpec(((Label)contentZoomUpPane.getChildren().get(5)).getText());
 
+        selectedCell.clearSubGoals();
+
+        ObservableList<Node> subGoalList = ((VBox) ((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent()).getChildren();
+        for (int i = 0; i< subGoalList.size(); i++){
+            AnchorPane goal = (AnchorPane) subGoalList.get(i);
+            SubGoal sg = new SubGoal(
+                Integer.parseInt(goal.getId()),
+                ((CheckBox)goal.getChildren().get(2)).isSelected());
+            sg.setContent(((Label)goal.getChildren().get(1)).getText());
+            selectedCell.appendSubGoals(sg);
+        }
+
         //remove all the subgoals within the subgoal display
-        ((VBox)((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent()).getChildren().clear();
+        subGoalList.clear();
+        
+
         contentZoomUpPane.setVisible(false);
+
     }
 
     //1.created date    2.deadline      3.reset button      4.main goal title
