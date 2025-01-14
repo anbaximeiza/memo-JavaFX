@@ -86,9 +86,6 @@ public class ZoomUpController implements Initializable{
         }
         selectedGoal.getChildren().get(8).setVisible(false);
         selectedGoal.getChildren().get(7).setVisible(false);
-        ((Label)selectedGoal.getChildren().get(6)).setText("Delete");
-        ((Label)selectedGoal.getChildren().get(5)).setText("Priority");
-        ((ImageView)selectedGoal.getChildren().get(9)).setVisible(false);
         selectedGoal=null;
     }
 }
