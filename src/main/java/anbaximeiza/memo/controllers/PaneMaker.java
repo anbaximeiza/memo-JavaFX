@@ -157,10 +157,8 @@ public class PaneMaker {
         if (temp.size()==0){
             return;
         }
-        AnchorPane[] result = new AnchorPane[temp.size()];
         for(int i = 0; i< temp.size(); i++){
-           result[0] = getSubGoalCell(temp.get(i));
+           holder.getChildren().add( getSubGoalCell(temp.get(i)));
         }
-        holder.getChildren().addAll(result);
     }
 }

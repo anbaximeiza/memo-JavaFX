@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.ResourceBundle;
 
 import anbaximeiza.memo.ContentCell;
+import anbaximeiza.memo.FileHandler;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -75,11 +76,19 @@ public class MainNavController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        paneMaker = new PaneMaker();
-        projectNameSet = new HashSet<>();
+        //used for testing
+        FileHandler fh = new FileHandler();
+        projectContentMap = fh.importExisting();
+        projectNameSet = fh.getProjectNameSet();
         projectTabMap = new HashMap<>();
+        paneMaker = new PaneMaker();
+        try {
+            initializeProjectTabMap();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         openedProjectSet = new HashSet<>(); 
-        projectContentMap = new HashMap<>();
         contentDisplayPane.getSelectionModel().selectedItemProperty().addListener(
             new ChangeListener<Tab>() {
                 @Override
@@ -142,12 +151,57 @@ public class MainNavController implements Initializable{
         
     }
 
+    public void initializeProjectTabMap() throws IOException{
+        //TODO -- to be completed
+        EventHandler<Event> onCellHolderClicked = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                AnchorPane selectedPane = (AnchorPane) ((Rectangle)event.getSource()).getParent();
+                String key = selectedPane.getChildren().get(0).getId();
+                int col = GridPane.getColumnIndex(selectedPane);
+                int row = GridPane.getRowIndex(selectedPane);
+                selectedCell = projectContentMap.get(key).get(row*5+col);
+                try {
+                    onContentDisplayCellClicked();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+        };
+        for (String key: projectNameSet){
+            Tab displayingTab = paneMaker.getContentTab(key);
+            ScrollPane scroll = (ScrollPane) displayingTab.getContent();
+            GridPane grid = (GridPane)(scroll).getContent();
+            int gridSize = 0;
+            for (ContentCell cell: projectContentMap.get(key)){
+                ((ImageView)cell.getHolder().getChildren().get(0)).setId(key);
+                cell.getHolder().getChildren().get(8).setOnMouseClicked(onCellHolderClicked);
+                if (gridSize%5 == 0){
+                    grid.getRowConstraints().add(new RowConstraints(130));
+                }
+                grid.add(cell.getHolder(),gridSize%5,gridSize/5);
+                gridSize++;
+            }
+            projectTabMap.put(key, displayingTab);
+            addProjectList(key);
+        }
+    }
+
     //Actual logic of the function beneath
     public void addProjectList(String itemName) throws IOException{
         //generate new panes from the pane maker
         AnchorPane projectCell = paneMaker.getNewProjectCell(itemName);
         projectList.getChildren().add(projectCell);
-        Tab contentPane = paneMaker.getContentTab(itemName);
+        Tab contentPane;
+        //create new one is a new project is created, else use the exisiting one(when starting the application)
+        if (projectTabMap.containsKey(itemName)){
+            contentPane = projectTabMap.get(itemName);
+        } else{
+            contentPane = paneMaker.getContentTab(itemName);
+            projectContentMap.put(itemName, new ArrayList<ContentCell>());
+        }
+        
 
         contentPane.setOnClosed(new EventHandler<Event>() {
             @Override
@@ -160,6 +214,9 @@ public class MainNavController implements Initializable{
             }
         
         });
+
+        //------------This section is for setting up the event handler for the project name cell solely
+        // i.e. the cells that appears on the left of the interface
         Platform.runLater(()->{
             resetProjectCellListener(projectCell);
 
@@ -170,9 +227,13 @@ public class MainNavController implements Initializable{
                     String key = ((Label)event.getSource()).getParent().getId();
                     //only add when the tab is not opened otherwise could trigger null pointer
                     if (!openedProjectSet.contains(key)){
-                        contentDisplayPane.getTabs().add(projectTabMap.get(key));
+                        Tab tab = projectTabMap.get(key);
+                        contentDisplayPane.getTabs().add(tab);
                         openedProjectSet.add(key);
                         plusSignPane.setVisible(true);
+                        KeyFrame f1 = new KeyFrame(Duration.millis(80), e->setContentScrollBarVisAmount((ScrollPane) tab.getContent()));
+                        Timeline ss = new Timeline(f1);
+                        ss.play();
                     }
                 }
             };
@@ -203,7 +264,6 @@ public class MainNavController implements Initializable{
         });
 
         projectTabMap.put(itemName, contentPane);
-        projectContentMap.put(itemName, new ArrayList<ContentCell>());
         
     }
 
@@ -371,7 +431,7 @@ public class MainNavController implements Initializable{
         GridPane selectedPane = (GridPane)tempPane.getContent();
         int temp = projectContentMap.get(currentTab.getText()).size();
         ContentCell ugood = paneMaker.getContentCell();
-        ugood.selfUpdate(selectedPane.getChildren().size()+1);
+        ugood.selfUpdate(selectedPane.getChildren().size()+1);//the parameter passing in is pointless at the moment
         ((ImageView)ugood.getHolder().getChildren().get(0)).setId(currentTab.getText());
         ugood.getHolder().getChildren().get(8).setOnMouseClicked(new EventHandler<Event>() {
             @Override
@@ -439,6 +499,7 @@ public class MainNavController implements Initializable{
         ((Label)contentZoomUpPane.getChildren().get(4)).setText(selectedCell.getMainGoal());
         ((Label)contentZoomUpPane.getChildren().get(5)).setText(selectedCell.getMainGoalSpec());
         VBox subGoalBox = (VBox) ((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent();
+        System.out.println(subGoalBox);
         paneMaker.loadSubGoalVBox(subGoalBox, selectedCell);
     }
 }
