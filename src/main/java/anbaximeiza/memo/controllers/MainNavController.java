@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
@@ -40,6 +41,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 public class MainNavController implements Initializable{
@@ -88,7 +91,6 @@ public class MainNavController implements Initializable{
         try {
             initializeProjectTabMap();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         openedProjectSet = new HashSet<>(); 
@@ -152,10 +154,21 @@ public class MainNavController implements Initializable{
             
         };
         
+        //TODO to be completed
+        //setting up on close event handler
+        Platform.runLater(()->{
+            Stage root = (Stage)mainNavPane.getScene().getWindow();
+            root.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    // file handler method here
+                }
+            });
+        });
+
     }
 
     public void initializeProjectTabMap() throws IOException{
-        //TODO -- to be completed
         EventHandler<Event> onCellHolderClicked = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
@@ -192,9 +205,14 @@ public class MainNavController implements Initializable{
     }
 
     //Actual logic of the function beneath
+    //this method is also used when initializing project tab map
     public void addProjectList(String itemName) throws IOException{
         //generate new panes from the pane maker
         AnchorPane projectCell = paneMaker.getNewProjectCell(itemName);
+
+        //default the project will not be save
+        projectCell.setId("no");
+
         projectList.getChildren().add(projectCell);
         Tab contentPane;
         //create new one is a new project is created, else use the exisiting one(when starting the application)
@@ -221,15 +239,19 @@ public class MainNavController implements Initializable{
         //------------This section is for setting up the event handler for the project name cell solely
         // i.e. the cells that appears on the left of the interface
         Platform.runLater(()->{
+
+            //complicated logic setting
             resetProjectCellListener(projectCell);
 
             //handler when the project cell is clicked
             EventHandler<Event> temp = new EventHandler<Event>() {
                 @Override
                 public void handle(Event event) {
-                    String key = ((Label)event.getSource()).getParent().getId();
+                    AnchorPane root =  (AnchorPane) ((Label)event.getSource()).getParent();
+                    String key = ((Label)root.getChildren().get(0)).getText();
                     //only add when the tab is not opened otherwise could trigger null pointer
                     if (!openedProjectSet.contains(key)){
+                        System.out.println(key);
                         Tab tab = projectTabMap.get(key);
                         contentDisplayPane.getTabs().add(tab);
                         openedProjectSet.add(key);
@@ -258,12 +280,21 @@ public class MainNavController implements Initializable{
                 }
                             
             };
+            //when label is clicked opening new tab if not already
             projectCell.getChildren().get(0).setOnMouseClicked(temp);
             projectCell.getChildren().get(6).setOnMouseClicked(temp);
+
+            //Rectangle listeners
             projectCell.getChildren().get(4).setOnMouseEntered(tt);
             projectCell.getChildren().get(5).setOnMouseEntered(tt);
+            projectCell.getChildren().get(8).setOnMouseEntered(tt);
+
             projectCell.getChildren().get(4).setOnMouseExited(tte);
             projectCell.getChildren().get(5).setOnMouseExited(tte);
+            projectCell.getChildren().get(8).setOnMouseEntered(tte);
+
+            Tooltip tp = new Tooltip("This project will not be saved when application closed.");
+            Tooltip.install((projectCell.getChildren().get(8)),tp);
         });
 
         projectTabMap.put(itemName, contentPane);
@@ -303,6 +334,24 @@ public class MainNavController implements Initializable{
                 onDeleteButtonClick(parent);
             }
         });
+        cell.getChildren().get(8).setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                AnchorPane parent =  (AnchorPane) ((Node)event.getSource()).getParent();
+                if (parent.getId().equals("yes")){
+                    parent.setId("no");
+                    Tooltip tp = new Tooltip("This project will not be saved when application closed.");
+                    Tooltip.install((parent.getChildren().get(8)),tp);
+                } else{
+                    parent.setId("yes");
+                    Tooltip tp = new Tooltip("This project will be saved when application closed.");
+                    Tooltip.install((parent.getChildren().get(8)),tp);
+                }
+                iconChange((ImageView) parent.getChildren().get(7), parent.getId()+"save");
+            }
+            
+        });
+
     }
 
     //generate a default name
@@ -328,7 +377,7 @@ public class MainNavController implements Initializable{
         }
         currentEditing = clicked;
         clicked.getChildren().get(1).setVisible(true);
-        ((TextField)clicked.getChildren().get(1)).setText(clicked.getId());
+        ((TextField)clicked.getChildren().get(1)).setText(((Label)clicked.getChildren().get(0)).getText());
         iconChange((ImageView)clicked.getChildren().get(2),"yes");
         iconChange((ImageView)clicked.getChildren().get(3),"undo");
         clicked.getChildren().get(4).setOnMouseClicked(projectEditHandler);
@@ -447,7 +496,6 @@ public class MainNavController implements Initializable{
                 try {
                     onContentDisplayCellClicked();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 

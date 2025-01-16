@@ -122,7 +122,6 @@ public class PaneMaker {
     public AnchorPane getNewProjectCell(String name) throws IOException{
         AnchorPane result = FXMLLoader.load(getClass().getResource("/fxml/projectCell.fxml"));
         ((Label)result.getChildren().get(0)).setText(name);
-        result.setId(name);
         return result;
     }
 
