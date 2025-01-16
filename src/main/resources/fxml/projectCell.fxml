@@ -31,7 +31,7 @@
       </Label>
       <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="147.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../img/unsave_icon.png" />
+            <Image url="@../img/nosave_icon.png" />
          </image>
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff97" height="22.0" layoutX="147.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
