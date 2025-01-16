@@ -12,22 +12,28 @@
    <children>
       <Label layoutX="8.0" layoutY="8.0" prefHeight="15.0" prefWidth="190.0" text="Project_name" />
       <TextField layoutX="5.0" layoutY="4.0" prefHeight="23.0" prefWidth="190.0" visible="false" />
-      <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="124.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="121.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/rename_icon.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="166.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="173.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/delete_icon.png" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff97" height="22.0" layoutX="124.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff97" height="22.0" layoutX="166.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff97" height="22.0" layoutX="121.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff97" height="22.0" layoutX="173.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
       <Label fx:id="deletionWarning" layoutX="3.0" layoutY="23.0" opacity="0.0" prefHeight="30.0" prefWidth="118.0" text="Once delete it cannot be recover, continue?" textFill="RED" wrapText="true">
          <font>
             <Font size="10.0" />
          </font>
       </Label>
+      <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="147.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/unsave_icon.png" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff97" height="22.0" layoutX="147.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
    </children>
 </AnchorPane>
