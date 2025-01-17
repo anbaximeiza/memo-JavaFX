@@ -78,6 +78,7 @@ public class MainNavController implements Initializable{
     EventHandler<KeyEvent> projectEditHandlerKey;
     EventHandler<Event> projectEditHandler;
     EventHandler<Event> projectDeleteHandler;
+    EventHandler<MouseEvent> projectLockHandler;
     @FXML Label deletionWarning;
 
     @Override
@@ -122,6 +123,36 @@ public class MainNavController implements Initializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        projectLockHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                AnchorPane parent =  (AnchorPane) ((Node)event.getSource()).getParent();
+                if (event.getClickCount() == 2){
+                    parent.getChildren().get(8).removeEventHandler(MouseEvent.MOUSE_CLICKED, projectLockHandler);
+                    parent.setId("lock");
+                    Tooltip tp = new Tooltip("This project will always be save when application closed.");
+                    Tooltip.install((parent.getChildren().get(8)),tp);
+                    iconChange((ImageView) parent.getChildren().get(7), "lock");
+                    displayMessage(
+                        "Project will always be saved when application closed, ", 
+                        MessageType.SUCCESS);
+                    return;
+                }
+
+                if (parent.getId().equals("yes")){
+                    parent.setId("no");
+                    Tooltip tp = new Tooltip("This project will not be saved when application closed.");
+                    Tooltip.install((parent.getChildren().get(8)),tp);
+                } else{
+                    parent.setId("yes");
+                    Tooltip tp = new Tooltip("This project will be saved when application closed.");
+                    Tooltip.install((parent.getChildren().get(8)),tp);
+                }
+                iconChange((ImageView) parent.getChildren().get(7), parent.getId()+"save");
+            }
+            
+        };
 
         projectEditHandlerKey =  new EventHandler<KeyEvent>() {
             @Override
@@ -268,6 +299,7 @@ public class MainNavController implements Initializable{
                 @Override
                 public void handle(Event event) {
                     ((Rectangle)event.getSource()).setOpacity(0.6);
+                    System.out.println("entered");
                 }
                 
             };
@@ -277,6 +309,7 @@ public class MainNavController implements Initializable{
                 @Override
                 public void handle(Event event) {
                     ((Rectangle)event.getSource()).setOpacity(0);
+                    System.out.println("exit");
                 }
                             
             };
@@ -291,7 +324,7 @@ public class MainNavController implements Initializable{
 
             projectCell.getChildren().get(4).setOnMouseExited(tte);
             projectCell.getChildren().get(5).setOnMouseExited(tte);
-            projectCell.getChildren().get(8).setOnMouseEntered(tte);
+            projectCell.getChildren().get(8).setOnMouseExited(tte);
 
             Tooltip tp = new Tooltip("This project will not be saved when application closed.");
             Tooltip.install((projectCell.getChildren().get(8)),tp);
@@ -334,23 +367,7 @@ public class MainNavController implements Initializable{
                 onDeleteButtonClick(parent);
             }
         });
-        cell.getChildren().get(8).setOnMouseClicked(new EventHandler<Event>() {
-            @Override
-            public void handle(Event event) {
-                AnchorPane parent =  (AnchorPane) ((Node)event.getSource()).getParent();
-                if (parent.getId().equals("yes")){
-                    parent.setId("no");
-                    Tooltip tp = new Tooltip("This project will not be saved when application closed.");
-                    Tooltip.install((parent.getChildren().get(8)),tp);
-                } else{
-                    parent.setId("yes");
-                    Tooltip tp = new Tooltip("This project will be saved when application closed.");
-                    Tooltip.install((parent.getChildren().get(8)),tp);
-                }
-                iconChange((ImageView) parent.getChildren().get(7), parent.getId()+"save");
-            }
-            
-        });
+        cell.getChildren().get(8).addEventHandler(MouseEvent.MOUSE_CLICKED, projectLockHandler);
 
     }
 

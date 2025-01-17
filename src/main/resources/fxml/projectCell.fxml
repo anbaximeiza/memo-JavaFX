@@ -22,7 +22,7 @@
             <Image url="@../img/delete_icon.png" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff97" height="22.0" layoutX="121.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff98" height="22.0" layoutX="121.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff97" height="22.0" layoutX="173.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
       <Label fx:id="deletionWarning" layoutX="3.0" layoutY="23.0" opacity="0.0" prefHeight="30.0" prefWidth="118.0" text="Once delete it cannot be recover, continue?" textFill="RED" wrapText="true">
          <font>
@@ -34,6 +34,6 @@
             <Image url="@../img/nosave_icon.png" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff97" height="22.0" layoutX="147.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff98" height="22.0" layoutX="147.0" layoutY="28.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="22.0" />
    </children>
 </AnchorPane>
