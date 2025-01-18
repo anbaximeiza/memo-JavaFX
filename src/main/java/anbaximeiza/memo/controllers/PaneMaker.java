@@ -135,7 +135,7 @@ public class PaneMaker {
             priority = "4";
         } else {
             content = goal.getContent();
-            selected = goal.getCompleted();
+            selected = goal.isCompleted();
             priority = Integer.toString(goal.getPriority());
         }
 

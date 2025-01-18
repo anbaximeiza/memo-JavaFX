@@ -25,7 +25,7 @@ public class SubGoal {
         this.content = content;
     }
 
-    public Boolean getCompleted() {
+    public Boolean isCompleted() {
         return completed;
     }
 

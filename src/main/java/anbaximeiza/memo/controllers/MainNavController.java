@@ -621,8 +621,9 @@ public class MainNavController implements Initializable{
                         continue;
                 }
                 fh.exportFile(
-                    projectContentMap.get(((Label)current.getChildren().get(1)).getText()), 
-                    isLocked);
+                    projectContentMap.get(((Label)current.getChildren().get(0)).getText()), 
+                    isLocked,
+                    ((Label)current.getChildren().get(0)).getText());
             }
             //close the application when everything is done
             ((Stage)mainNavPane.getScene().getWindow()).close();

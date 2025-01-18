@@ -3,9 +3,12 @@ package anbaximeiza.memo;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import anbaximeiza.memo.controllers.PaneMaker;
 
@@ -90,8 +93,44 @@ public class FileHandler {
         return projectNameSet;
     }
 
-    public void exportFile(ArrayList<ContentCell> content, Boolean isLocked){
-
+    public void exportFile(ArrayList<ContentCell> content, Boolean isLocked, String projectName){
+        LinkedList<String> file =  new LinkedList<>();
+        file.add(content.size()+","+String.valueOf(isLocked));
+        for (ContentCell cell : content){
+            file.add(cell.getCreateDate()+","+cell.getEndDate());
+            file.add(cell.getMainGoal());
+            file.add(cell.getMainGoalSpec());
+            ArrayList<SubGoal> subs = cell.getSubGoals();
+            file.add(String.valueOf(subs.size()));
+            for (SubGoal sub: subs){
+                if (sub.isCompleted()){
+                    file.add("1,"+sub.getPriority());
+                } else{
+                    file.add("0,"+sub.getPriority());
+                }
+                file.add(sub.getContent());
+            }
+        }
+        String result = String.join("\n", file);
+        try {
+            File textFile = new File(
+                "src/main/java/anbaximeiza/memo/saveFile/"+
+                projectName+
+                ".txt");
+            if (textFile.createNewFile()) {
+                System.out.println("File created: " + textFile.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+            FileWriter fw = new FileWriter("src/main/java/anbaximeiza/memo/saveFile/"+
+                                            projectName+
+                                            ".txt");
+            fw.write(result);
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 
     public void clearSavedFile(){
@@ -100,7 +139,6 @@ public class FileHandler {
         for (File f : directoryListing){
             f.delete();
         }
-
     }
 
     public Boolean getIsLockedStatus(String Key){
