@@ -7,8 +7,7 @@ import javafx.scene.layout.AnchorPane;
 
 public class ContentCell {
     
-    //The projectName(key) that's used for lookup the arrayList for cell
-    //is stored as the id of the first children of the anchorpane
+    //The saveStatus is stored as the id of the anchorpane
 
     private AnchorPane holder;
     private String mainGoal = "Deafult";

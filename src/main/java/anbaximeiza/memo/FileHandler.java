@@ -8,18 +8,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import anbaximeiza.memo.controllers.PaneMaker;
-import javafx.scene.control.Tab;
 
 public class FileHandler {
 
     PaneMaker paneMaker;
     HashSet<String> projectNameSet;
     HashMap<String,ArrayList<ContentCell>> projectContentMap;
+    HashMap<String,Boolean> isProjectLocked;
 
     public FileHandler(){
         paneMaker = new PaneMaker();
         projectNameSet = new HashSet<>();
         projectContentMap = new HashMap<>();
+        isProjectLocked = new HashMap<>();
     }
 
     //import from existing folder, return as the project content map in mainNav
@@ -46,7 +47,13 @@ public class FileHandler {
         ArrayList<ContentCell> result =  new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader("src/main/java/anbaximeiza/memo/saveFile/"+projectName));
-            int listSize = Integer.parseInt(reader.readLine());
+            String[] temp = reader.readLine().split(",");
+            int listSize = Integer.parseInt(temp[0]);
+            if (temp[1].equals("true")){
+                isProjectLocked.put(projectName.replace(".txt", ""), true);
+            } else{
+                isProjectLocked.put(projectName.replace(".txt", ""), false);
+            }
             for (int i = 0; i< listSize; i++){
                 ContentCell holder = new ContentCell(paneMaker.getContentHolder());
                 String[] date = reader.readLine().split(",");
@@ -81,6 +88,23 @@ public class FileHandler {
 
     public HashSet<String> getProjectNameSet(){
         return projectNameSet;
+    }
+
+    public void exportFile(ArrayList<ContentCell> content, Boolean isLocked){
+
+    }
+
+    public void clearSavedFile(){
+        File dir = new File("src/main/java/anbaximeiza/memo/saveFile");
+        File[] directoryListing = dir.listFiles();
+        for (File f : directoryListing){
+            f.delete();
+        }
+
+    }
+
+    public Boolean getIsLockedStatus(String Key){
+        return isProjectLocked.get(Key);
     }
     
 }

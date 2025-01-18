@@ -32,6 +32,7 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TabPane?>
@@ -43,6 +44,7 @@
 <?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Ellipse?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="mainNavPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="873.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anbaximeiza.memo.controllers.MainNavController">
    <children>
@@ -99,5 +101,19 @@
       </AnchorPane>
       <ScrollBar fx:id="contentScrollBar" layoutX="858.0" layoutY="30.0" max="1.0" orientation="VERTICAL" prefHeight="530.0" prefWidth="14.0" style="-fx-background-color: transparent;" visible="false" />
       <VBox fx:id="messageBox" alignment="BOTTOM_LEFT" layoutX="873.0" prefHeight="560.0" prefWidth="179.0" />
+      <AnchorPane fx:id="loadingPane" layoutX="308.0" layoutY="201.0" prefHeight="130.0" prefWidth="255.0" visible="false">
+         <children>
+            <Label layoutX="18.0" layoutY="42.0" style="-fx-background-color: white;" text="Saving progress, just a second...">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="78.0" fitWidth="77.0" layoutX="101.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/loading.gif" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

@@ -49,10 +49,12 @@ public class MainNavController implements Initializable{
 
     @FXML private VBox projectList;
     @FXML private AnchorPane mainNavPane;
+    @FXML private AnchorPane loadingPane;
     @FXML private VBox messageBox;
     @FXML private TabPane contentDisplayPane;
     @FXML private AnchorPane plusSignPane;
     @FXML private ScrollBar contentScrollBar;
+    @FXML private Label deletionWarning;
 
     //use for storing the projects
     HashSet<String> projectNameSet;
@@ -79,12 +81,12 @@ public class MainNavController implements Initializable{
     EventHandler<Event> projectEditHandler;
     EventHandler<Event> projectDeleteHandler;
     EventHandler<MouseEvent> projectLockHandler;
-    @FXML Label deletionWarning;
+
+    FileHandler fh;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //used for testing
-        FileHandler fh = new FileHandler();
+        fh = new FileHandler();
         projectContentMap = fh.importExisting();
         projectNameSet = fh.getProjectNameSet();
         projectTabMap = new HashMap<>();
@@ -185,14 +187,13 @@ public class MainNavController implements Initializable{
             
         };
         
-        //TODO to be completed
         //setting up on close event handler
         Platform.runLater(()->{
             Stage root = (Stage)mainNavPane.getScene().getWindow();
             root.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
-                    // file handler method here
+                    onApplicationClosed();
                 }
             });
         });
@@ -243,12 +244,25 @@ public class MainNavController implements Initializable{
 
         //default the project will not be save
         projectCell.setId("no");
-
+        
+        Tooltip tp = new Tooltip("This project will not be saved when application closed.");
+        Tooltip.install((projectCell.getChildren().get(8)),tp);
         projectList.getChildren().add(projectCell);
         Tab contentPane;
         //create new one is a new project is created, else use the exisiting one(when starting the application)
         if (projectTabMap.containsKey(itemName)){
             contentPane = projectTabMap.get(itemName);
+            if (fh.getIsLockedStatus(itemName)){
+                projectCell.setId("lock");
+                tp = new Tooltip("This project will always be save when application closed.");
+                Tooltip.install((projectCell.getChildren().get(8)),tp);
+                iconChange((ImageView) projectCell.getChildren().get(7), "lock");
+            } else{
+                projectCell.setId("yes");
+                tp = new Tooltip("This project will be save when application closed.");
+                Tooltip.install((projectCell.getChildren().get(8)),tp);
+                iconChange((ImageView) projectCell.getChildren().get(7), "yessave");
+            }
         } else{
             contentPane = paneMaker.getContentTab(itemName);
             projectContentMap.put(itemName, new ArrayList<ContentCell>());
@@ -299,7 +313,6 @@ public class MainNavController implements Initializable{
                 @Override
                 public void handle(Event event) {
                     ((Rectangle)event.getSource()).setOpacity(0.6);
-                    System.out.println("entered");
                 }
                 
             };
@@ -309,7 +322,6 @@ public class MainNavController implements Initializable{
                 @Override
                 public void handle(Event event) {
                     ((Rectangle)event.getSource()).setOpacity(0);
-                    System.out.println("exit");
                 }
                             
             };
@@ -326,8 +338,6 @@ public class MainNavController implements Initializable{
             projectCell.getChildren().get(5).setOnMouseExited(tte);
             projectCell.getChildren().get(8).setOnMouseExited(tte);
 
-            Tooltip tp = new Tooltip("This project will not be saved when application closed.");
-            Tooltip.install((projectCell.getChildren().get(8)),tp);
         });
 
         projectTabMap.put(itemName, contentPane);
@@ -367,7 +377,9 @@ public class MainNavController implements Initializable{
                 onDeleteButtonClick(parent);
             }
         });
-        cell.getChildren().get(8).addEventHandler(MouseEvent.MOUSE_CLICKED, projectLockHandler);
+        if (!cell.getId().equals("lock")){
+            cell.getChildren().get(8).addEventHandler(MouseEvent.MOUSE_CLICKED, projectLockHandler);
+        }
 
     }
 
@@ -585,5 +597,35 @@ public class MainNavController implements Initializable{
         VBox subGoalBox = (VBox) ((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent();
         System.out.println(subGoalBox);
         paneMaker.loadSubGoalVBox(subGoalBox, selectedCell);
+    }
+
+    public void onApplicationClosed(){
+        loadingPane.setVisible(true);
+        projectList.setDisable(true);
+        contentDisplayPane.setDisable(true);
+        //TODO -- uncomment this method 
+        //fh.clearSavedFile();
+        Platform.runLater(()->{
+            ObservableList<Node> projects = projectList.getChildren();
+            for (int i = 0; i< projects.size(); i++){
+                AnchorPane current = (AnchorPane) projects.get(i);
+                Boolean isLocked;
+                switch (current.getId()) {
+                    case "yes":
+                        isLocked = false;
+                        break;
+                    case "lock":
+                        isLocked = true;
+                        break;
+                    default:
+                        continue;
+                }
+                fh.exportFile(
+                    projectContentMap.get(((Label)current.getChildren().get(1)).getText()), 
+                    isLocked);
+            }
+            //close the application when everything is done
+            ((Stage)mainNavPane.getScene().getWindow()).close();
+        });
     }
 }

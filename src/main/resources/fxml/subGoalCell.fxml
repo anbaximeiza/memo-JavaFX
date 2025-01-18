@@ -12,7 +12,7 @@
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="68.0" prefWidth="457.0" style="-fx-border-color: black; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anbaximeiza.memo.controllers.SubGoalController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="68.0" layoutX="342.0" stroke="BLACK" strokeType="INSIDE" width="115.0" />
-      <Label fx:id="contentLabel" alignment="TOP_LEFT" ellipsisString=":?" layoutX="4.0" layoutY="3.0" maxWidth="-Infinity" minHeight="50.0" minWidth="-Infinity" onMouseClicked="#onContentLabelClicked" prefHeight="62.0" prefWidth="340.0" text="Label" wrapText="true">
+      <Label fx:id="contentLabel" alignment="TOP_LEFT" ellipsisString="^?" layoutX="4.0" layoutY="3.0" maxWidth="-Infinity" minWidth="-Infinity" onMouseClicked="#onContentLabelClicked" prefHeight="62.0" prefWidth="340.0" text="Label" wrapText="true">
          <font>
             <Font size="15.0" />
          </font>
