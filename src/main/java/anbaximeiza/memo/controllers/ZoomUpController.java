@@ -26,9 +26,14 @@ public class ZoomUpController implements Initializable{
     @FXML VBox subGoalBox;
     @FXML AnchorPane root;
 
+    @FXML ImageView titleEdit;
+    @FXML ImageView specEdit;
+
     private AnchorPane selectedGoal;
 
     private PaneMaker paneMaker;
+
+    private ImageView hoveredEdit;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -88,4 +93,39 @@ public class ZoomUpController implements Initializable{
         selectedGoal.getChildren().get(7).setVisible(false);
         selectedGoal=null;
     }
+
+    public void onTitleHovered(){
+        titleEdit.setVisible(true);
+        titleEdit.setOpacity(0.25);
+    }
+
+    public void onSpecHovered(){
+        specEdit.setVisible(true);
+        specEdit.setOpacity(0.25);
+    }
+
+    public void onLabelUnHovered(){
+        Platform.runLater(()->{
+            if (hoveredEdit==null){
+                titleEdit.setVisible(false);
+                specEdit.setVisible(false);
+            }
+        });
+    }
+
+    public void onTitleEditHovered(){
+        hoveredEdit = titleEdit;
+        hoveredEdit.setOpacity(1);
+
+    }
+
+    public void onEditUnHovered(){
+        hoveredEdit = null;
+    }
+
+    public void onSpecEditHovered(){
+        hoveredEdit = specEdit;
+        hoveredEdit.setOpacity(1);
+    }
+
 }
