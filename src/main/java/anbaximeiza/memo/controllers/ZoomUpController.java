@@ -14,8 +14,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -23,24 +26,31 @@ import javafx.util.Duration;
 
 public class ZoomUpController implements Initializable{
 
-    @FXML VBox subGoalBox;
-    @FXML AnchorPane root;
+    @FXML private VBox subGoalBox;
+    @FXML private AnchorPane root;
 
-    @FXML ImageView titleEdit;
-    @FXML ImageView specEdit;
+    @FXML private Label titleLabel;
+    @FXML private Label specLabel;
+
+    @FXML private ImageView titleEdit;
+    @FXML private ImageView specEdit;
+    @FXML private TextArea titleTextArea;
+    @FXML private TextArea specTextArea;
+
 
     private AnchorPane selectedGoal;
 
     private PaneMaker paneMaker;
 
     private ImageView hoveredEdit;
-
+    private EventHandler<KeyEvent> textAreaHandler;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         paneMaker = new PaneMaker();
         root.visibleProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                onTextAreaEditingFinish();
                 if (oldValue == false){
                     KeyFrame f1 = new KeyFrame(Duration.millis(200), e->{
                         for (Node i : subGoalBox.getChildren()){
@@ -53,6 +63,22 @@ public class ZoomUpController implements Initializable{
             }
             
         });
+
+        textAreaHandler = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals(KeyCode.ENTER)){
+                    onTextAreaEditingFinish();
+                }
+            }
+            
+        };
+    }
+
+    //helper function from other controller
+    public void iconChange(ImageView node, String imgName){
+        Image buffer= new Image(getClass().getResourceAsStream("/img/"+ imgName+"_icon.png"));
+        node.setImage(buffer);
     }
 
     public void addSubGoalListener(AnchorPane goal){
@@ -127,5 +153,46 @@ public class ZoomUpController implements Initializable{
         hoveredEdit = specEdit;
         hoveredEdit.setOpacity(1);
     }
+
+    public boolean onTextAreaEditingFinish(){
+        if (titleTextArea.isVisible()){
+            titleTextArea.setVisible(false);
+            titleLabel.setText(titleTextArea.getText());
+            iconChange(titleEdit, "rename");
+            titleTextArea.removeEventHandler(KeyEvent.KEY_PRESSED, textAreaHandler);
+            return true;
+        }
+        if (specTextArea.isVisible()){
+            specTextArea.setVisible(false);
+            specLabel.setText(specTextArea.getText());
+            iconChange(specEdit, "rename");
+            specTextArea.removeEventHandler(KeyEvent.KEY_PRESSED, textAreaHandler);
+            return true;
+        }
+        return false;
+    }
+
+    public void onTitleEditClicked(){
+        if (!onTextAreaEditingFinish()){
+            titleTextArea.setVisible(true);
+            titleTextArea.setText(titleLabel.getText());
+            iconChange(titleEdit, "yes");
+            titleTextArea.addEventHandler(KeyEvent.KEY_PRESSED, textAreaHandler);
+            titleTextArea.requestFocus();
+        }
+
+    }
+
+    
+    public void onSpecEditClicked(){
+        if (!onTextAreaEditingFinish()){
+            specTextArea.setVisible(true);
+            specTextArea.setText(specLabel.getText());
+            iconChange(specEdit, "yes");
+            specTextArea.addEventHandler(KeyEvent.KEY_PRESSED, textAreaHandler);
+            specTextArea.requestFocus();
+        }
+    }
+
 
 }

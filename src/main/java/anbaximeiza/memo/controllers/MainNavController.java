@@ -560,6 +560,9 @@ public class MainNavController implements Initializable{
 
 
     public void onContentDisplayCellClose(){
+        if (!contentZoomUpPane.isVisible()){
+            return;
+        }
         selectedCell.setEndDate(((Label)contentZoomUpPane.getChildren().get(2)).getText().replaceFirst("^Deadline: ",""));
         selectedCell.setMainGoal(((Label)contentZoomUpPane.getChildren().get(4)).getText());
         selectedCell.setMainGoalSpec(((Label)contentZoomUpPane.getChildren().get(5)).getText());
@@ -573,7 +576,7 @@ public class MainNavController implements Initializable{
             SubGoal sg = new SubGoal(
                 Integer.parseInt(goal.getId()),
                 ((CheckBox)goal.getChildren().get(2)).isSelected());
-            sg.setContent(((Label)goal.getChildren().get(1)).getText());
+            sg.setContent(((Label)goal.getChildren().get(1)).getText().strip());
             selectedCell.appendSubGoals(sg);
         }
 
@@ -600,11 +603,11 @@ public class MainNavController implements Initializable{
     }
 
     public void onApplicationClosed(){
+        onContentDisplayCellClose();
         loadingPane.setVisible(true);
         projectList.setDisable(true);
         contentDisplayPane.setDisable(true);
-        //TODO -- uncomment this method 
-        //fh.clearSavedFile();
+        fh.clearSavedFile();
         Platform.runLater(()->{
             ObservableList<Node> projects = projectList.getChildren();
             for (int i = 0; i< projects.size(); i++){
