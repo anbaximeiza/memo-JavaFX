@@ -52,6 +52,8 @@ public class ZoomUpController implements Initializable{
 
     private ImageView hoveredEdit;
     private EventHandler<KeyEvent> textAreaHandler;
+
+    private VBox messageBox = null;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         paneMaker = new PaneMaker();
@@ -60,7 +62,10 @@ public class ZoomUpController implements Initializable{
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 onTextAreaEditingFinish();
                 if (oldValue == false){
-                    System.out.println("changed detected");
+                    if (messageBox ==null){
+                        messageBox = (VBox) ((AnchorPane)root.getParent()).getChildren().get(5);
+                        displayMessage("testing", MessageType.SUCCESS);
+                    }
                     KeyFrame f1 = new KeyFrame(Duration.millis(200), e->{
                         for (Node i : subGoalBox.getChildren()){
                             addSubGoalListener((AnchorPane) i);
@@ -225,6 +230,35 @@ public class ZoomUpController implements Initializable{
         LocalDate currentDate = LocalDate.parse(current,temp);
         ddlPicker.setValue(currentDate);
         calenderPane.setVisible(true);
+    }
+
+    //copy from MainNav
+     //message animations
+     public void messageSlideIn(AnchorPane message){
+        TranslateTransition temp =  new TranslateTransition(Duration.millis(300));
+        temp.setByX(-250);
+        temp.setNode(message);
+        temp.play();
+    }
+
+    public void messageSlideOut(AnchorPane message){
+        TranslateTransition temp =  new TranslateTransition(Duration.millis(300));
+        temp.setByX(250);
+        temp.setNode(message);
+        temp.play();
+    }
+
+
+    //Called when a message is needed to be displayed(pop up on the down right corner)
+    public void displayMessage(String message, MessageType type ){
+        AnchorPane messagePane = paneMaker.getAnchorPane(message, type);
+        messageBox.getChildren().add(messagePane);
+        KeyFrame f1 = new KeyFrame(Duration.millis(0), e -> messageSlideIn(messagePane));
+        KeyFrame f2 = new KeyFrame(Duration.millis(1500), e -> messageSlideOut(messagePane));
+        KeyFrame f3 = new KeyFrame(Duration.millis(1850), e -> messageBox.getChildren().remove(0));
+        Timeline display =  new Timeline(f1,f2,f3);
+        display.play();
+
     }
 
 }

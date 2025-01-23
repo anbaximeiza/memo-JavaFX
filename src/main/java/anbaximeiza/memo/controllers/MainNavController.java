@@ -114,7 +114,9 @@ public class MainNavController implements Initializable{
             contentZoomUpPane=paneMaker.getContentCellZoomUp();
             contentZoomUpPane.setVisible(false);
             contentZoomUpPane.setLayoutX(202);
-            mainNavPane.getChildren().add(contentZoomUpPane);
+            Platform.runLater(()->{
+                mainNavPane.getChildren().add(4,contentZoomUpPane);
+            });
             contentZoomUpPane.getChildren().get(7).setOnMouseClicked(new EventHandler<Event>() {
                 @Override
                 public void handle(Event event) {
@@ -563,6 +565,7 @@ public class MainNavController implements Initializable{
         if (!contentZoomUpPane.isVisible() || contentZoomUpPane == null){
             return;
         }
+        displayMessage("testttt", MessageType.SUCCESS);
         selectedCell.setEndDate(((Label)contentZoomUpPane.getChildren().get(2)).getText().replaceFirst("^Deadline: ",""));
         selectedCell.setMainGoal(((Label)contentZoomUpPane.getChildren().get(4)).getText());
         selectedCell.setMainGoalSpec(((Label)contentZoomUpPane.getChildren().get(5)).getText());

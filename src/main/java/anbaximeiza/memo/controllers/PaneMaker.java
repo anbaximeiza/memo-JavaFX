@@ -44,7 +44,9 @@ public class PaneMaker {
         messageLabel.setAlignment(Pos.TOP_LEFT);
         messageLabel.setLayoutX(81);
         messageLabel.setLayoutY(12);
+        messageLabel.setMinHeight(59.2);
         messageLabel.setMaxHeight(59.2);
+        messageLabel.setMinWidth(150.4);
         messageLabel.setMaxWidth(150.4);
         messageLabel.setFont(Font.font("Arial", 15));
         messageLabel.setWrapText(true);
@@ -59,11 +61,11 @@ public class PaneMaker {
         switch (type) {
             case ERROR:
                 result.setStyle(
-                        "-fx-padding: 2;-fx-border-color: red; -fx-border-radius: 15; -fx-background-color: transparent; -fx-border-width: 3;");
+                        "-fx-padding: 2;-fx-border-color: red; -fx-border-radius: 15; -fx-background-color: white; -fx-border-width: 3;");
                 break;
             case SUCCESS:
                 result.setStyle(
-                        "-fx-padding: 2; -fx-border-color: green; -fx-border-radius: 15; -fx-background-color: transparent; -fx-border-width: 3;");
+                        "-fx-padding: 2; -fx-border-color: green; -fx-border-radius: 15; -fx-background-color: white; -fx-border-width: 3;");
             default:// left for warning
                 break;
         }
