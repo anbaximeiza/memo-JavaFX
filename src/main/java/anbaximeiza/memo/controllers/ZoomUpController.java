@@ -64,7 +64,6 @@ public class ZoomUpController implements Initializable{
                 if (oldValue == false){
                     if (messageBox ==null){
                         messageBox = (VBox) ((AnchorPane)root.getParent()).getChildren().get(5);
-                        displayMessage("testing", MessageType.SUCCESS);
                     }
                     KeyFrame f1 = new KeyFrame(Duration.millis(200), e->{
                         for (Node i : subGoalBox.getChildren()){
@@ -97,6 +96,17 @@ public class ZoomUpController implements Initializable{
             @Override
             public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
                     LocalDate newValue) {
+                String current  = ddlLabel.getText().replaceFirst("^Deadline: ","");
+                DateTimeFormatter temp = DateTimeFormatter.ofPattern("dd-MM-yy");
+                LocalDate currentDDL = LocalDate.parse(current,temp);
+                if (newValue.isEqual(currentDDL)){
+                    return;
+                } else if (newValue.isBefore(LocalDate.now())){
+                    displayMessage("Deadline already pass!",
+                    MessageType.ERROR);
+                    calenderPane.setVisible(false);
+                   return;
+                }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy");
                 ddlLabel.setText("Deadline: "+newValue.format(formatter));
                 calenderPane.setVisible(false);
