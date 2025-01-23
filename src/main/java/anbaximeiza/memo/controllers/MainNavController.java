@@ -560,7 +560,7 @@ public class MainNavController implements Initializable{
 
 
     public void onContentDisplayCellClose(){
-        if (!contentZoomUpPane.isVisible()){
+        if (!contentZoomUpPane.isVisible() || contentZoomUpPane == null){
             return;
         }
         selectedCell.setEndDate(((Label)contentZoomUpPane.getChildren().get(2)).getText().replaceFirst("^Deadline: ",""));

@@ -2,10 +2,13 @@ package anbaximeiza.memo.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,8 +16,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.skin.DatePickerSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -31,14 +36,17 @@ public class ZoomUpController implements Initializable{
 
     @FXML private Label titleLabel;
     @FXML private Label specLabel;
+    @FXML private Label ddlLabel;
 
     @FXML private ImageView titleEdit;
     @FXML private ImageView specEdit;
     @FXML private TextArea titleTextArea;
     @FXML private TextArea specTextArea;
-
+    
+    @FXML private AnchorPane calenderPane;
 
     private AnchorPane selectedGoal;
+    private DatePicker ddlPicker;
 
     private PaneMaker paneMaker;
 
@@ -52,6 +60,7 @@ public class ZoomUpController implements Initializable{
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 onTextAreaEditingFinish();
                 if (oldValue == false){
+                    System.out.println("changed detected");
                     KeyFrame f1 = new KeyFrame(Duration.millis(200), e->{
                         for (Node i : subGoalBox.getChildren()){
                             addSubGoalListener((AnchorPane) i);
@@ -73,6 +82,22 @@ public class ZoomUpController implements Initializable{
             }
             
         };
+
+        ddlPicker = new DatePicker(LocalDate.now());
+        DatePickerSkin datePickerSkin = new DatePickerSkin(ddlPicker);
+        Node popupContent = datePickerSkin.getPopupContent();
+        calenderPane.getChildren().add(popupContent);
+
+        ddlPicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+            @Override
+            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
+                    LocalDate newValue) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy");
+                ddlLabel.setText("Deadline: "+newValue.format(formatter));
+                calenderPane.setVisible(false);
+            }
+            
+        });
     }
 
     //helper function from other controller
@@ -194,5 +219,12 @@ public class ZoomUpController implements Initializable{
         }
     }
 
+    public void onReselectDeadLine(){
+        String current  = ddlLabel.getText().replaceFirst("^Deadline: ","");
+        DateTimeFormatter temp = DateTimeFormatter.ofPattern("dd-MM-yy");
+        LocalDate currentDate = LocalDate.parse(current,temp);
+        ddlPicker.setValue(currentDate);
+        calenderPane.setVisible(true);
+    }
 
 }
