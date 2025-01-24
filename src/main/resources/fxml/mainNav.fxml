@@ -100,7 +100,7 @@
          </children>
       </AnchorPane>
       <ScrollBar fx:id="contentScrollBar" layoutX="858.0" layoutY="30.0" max="1.0" orientation="VERTICAL" prefHeight="530.0" prefWidth="14.0" style="-fx-background-color: transparent;" visible="false" />
-      <VBox fx:id="messageBox" alignment="BOTTOM_LEFT" layoutX="873.0" prefHeight="560.0" prefWidth="179.0" />
+      <VBox fx:id="messageBox" alignment="BOTTOM_LEFT" layoutX="873.0" layoutY="80.0" prefHeight="480.0" prefWidth="179.0" />
       <AnchorPane fx:id="loadingPane" layoutX="308.0" layoutY="201.0" prefHeight="130.0" prefWidth="255.0" visible="false">
          <children>
             <Label layoutX="18.0" layoutY="42.0" style="-fx-background-color: white;" text="Saving progress, just a second...">
@@ -113,6 +113,20 @@
                   <Image url="@../img/loading.gif" />
                </image>
             </ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="loadingCell" layoutX="203.0" layoutY="29.0" prefHeight="530.4" prefWidth="672.0" style="-fx-background-color: white;" visible="false">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="261.0" layoutY="190.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/loading.gif" />
+               </image>
+            </ImageView>
+            <Label layoutX="281.0" layoutY="340.0" text="Loading...">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

@@ -56,6 +56,8 @@ public class MainNavController implements Initializable{
     @FXML private ScrollBar contentScrollBar;
     @FXML private Label deletionWarning;
 
+    @FXML private AnchorPane loadingCell;
+
     //use for storing the projects
     HashSet<String> projectNameSet;
     HashMap<String,Tab> projectTabMap;
@@ -294,6 +296,7 @@ public class MainNavController implements Initializable{
             EventHandler<Event> temp = new EventHandler<Event>() {
                 @Override
                 public void handle(Event event) {
+                    onContentDisplayCellClose();
                     AnchorPane root =  (AnchorPane) ((Label)event.getSource()).getParent();
                     String key = ((Label)root.getChildren().get(0)).getText();
                     //only add when the tab is not opened otherwise could trigger null pointer
@@ -303,9 +306,12 @@ public class MainNavController implements Initializable{
                         contentDisplayPane.getTabs().add(tab);
                         openedProjectSet.add(key);
                         plusSignPane.setVisible(true);
+                        contentDisplayPane.getSelectionModel().select(tab);
                         KeyFrame f1 = new KeyFrame(Duration.millis(80), e->setContentScrollBarVisAmount((ScrollPane) tab.getContent()));
                         Timeline ss = new Timeline(f1);
                         ss.play();
+                    } else{
+                        contentDisplayPane.getSelectionModel().select(projectTabMap.get(key));
                     }
                 }
             };
@@ -596,15 +602,22 @@ public class MainNavController implements Initializable{
     //1.created date    2.deadline      3.reset button      4.main goal title
     //5.main goal specification     6.Scrollpane for sub goals      7.ImageView close icon
     public void onContentDisplayCellClicked() throws IOException{
-        contentZoomUpPane.setVisible(true);
-
-        ((Label)contentZoomUpPane.getChildren().get(1)).setText("Created on: "+selectedCell.getCreateDate());
-        ((Label)contentZoomUpPane.getChildren().get(2)).setText("Deadline: "+selectedCell.getEndDate());
-        ((Label)contentZoomUpPane.getChildren().get(4)).setText(selectedCell.getMainGoal());
-        ((Label)contentZoomUpPane.getChildren().get(5)).setText(selectedCell.getMainGoalSpec());
-        VBox subGoalBox = (VBox) ((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent();
-        System.out.println(subGoalBox);
-        paneMaker.loadSubGoalVBox(subGoalBox, selectedCell);
+        loadingCell.setVisible(true);
+        Platform.runLater(()->{
+            contentZoomUpPane.setVisible(true);
+            ((Label)contentZoomUpPane.getChildren().get(1)).setText("Created on: "+selectedCell.getCreateDate());
+            ((Label)contentZoomUpPane.getChildren().get(2)).setText("Deadline: "+selectedCell.getEndDate());
+            ((Label)contentZoomUpPane.getChildren().get(4)).setText(selectedCell.getMainGoal());
+            ((Label)contentZoomUpPane.getChildren().get(5)).setText(selectedCell.getMainGoalSpec());
+            VBox subGoalBox = (VBox) ((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent();
+            System.out.println("working now");
+            try {
+                paneMaker.loadSubGoalVBox(subGoalBox, selectedCell);
+                loadingCell.setVisible(false);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }});
+        
     }
 
     public void onApplicationClosed(){

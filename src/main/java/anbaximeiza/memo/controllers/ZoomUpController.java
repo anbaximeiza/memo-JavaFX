@@ -45,6 +45,9 @@ public class ZoomUpController implements Initializable{
     
     @FXML private AnchorPane calenderPane;
 
+    @FXML private ImageView loadingImage;
+    @FXML private VBox  orderDisplayBox;
+
     private AnchorPane selectedGoal;
     private DatePicker ddlPicker;
 
@@ -97,6 +100,12 @@ public class ZoomUpController implements Initializable{
             public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
                     LocalDate newValue) {
                 String current  = ddlLabel.getText().replaceFirst("^Deadline: ","");
+                if (current.equals("null")){
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy");
+                    ddlLabel.setText("Deadline: "+newValue.format(formatter));
+                    calenderPane.setVisible(false);
+                    return;
+                }
                 DateTimeFormatter temp = DateTimeFormatter.ofPattern("dd-MM-yy");
                 LocalDate currentDDL = LocalDate.parse(current,temp);
                 if (newValue.isEqual(currentDDL)){
@@ -197,14 +206,14 @@ public class ZoomUpController implements Initializable{
     public boolean onTextAreaEditingFinish(){
         if (titleTextArea.isVisible()){
             titleTextArea.setVisible(false);
-            titleLabel.setText(titleTextArea.getText());
+            titleLabel.setText(titleTextArea.getText().strip());
             iconChange(titleEdit, "rename");
             titleTextArea.removeEventHandler(KeyEvent.KEY_PRESSED, textAreaHandler);
             return true;
         }
         if (specTextArea.isVisible()){
             specTextArea.setVisible(false);
-            specLabel.setText(specTextArea.getText());
+            specLabel.setText(specTextArea.getText().strip());
             iconChange(specEdit, "rename");
             specTextArea.removeEventHandler(KeyEvent.KEY_PRESSED, textAreaHandler);
             return true;
@@ -240,9 +249,13 @@ public class ZoomUpController implements Initializable{
             return;
         }
         String current  = ddlLabel.getText().replaceFirst("^Deadline: ","");
-        DateTimeFormatter temp = DateTimeFormatter.ofPattern("dd-MM-yy");
-        LocalDate currentDate = LocalDate.parse(current,temp);
-        ddlPicker.setValue(currentDate);
+        if (current.equals("null")){
+            ddlPicker.setValue(LocalDate.now());
+        } else{
+            DateTimeFormatter temp = DateTimeFormatter.ofPattern("dd-MM-yy");
+            LocalDate currentDate = LocalDate.parse(current,temp);
+            ddlPicker.setValue(currentDate);
+        }
         calenderPane.setVisible(true);
     }
 

@@ -44,6 +44,11 @@
             <Image url="@../img/close_icon.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="loadingImage" fitHeight="132.0" fitWidth="131.0" layoutX="316.0" layoutY="351.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/loading.gif" />
+         </image>
+      </ImageView>
       <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="615.0" layoutY="294.0" onMouseClicked="#onPlusImageClicked" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/new_icon.png" />
