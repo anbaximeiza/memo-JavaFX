@@ -235,6 +235,10 @@ public class ZoomUpController implements Initializable{
     }
 
     public void onReselectDeadLine(){
+        if (calenderPane.isVisible()){
+            calenderPane.setVisible(false);
+            return;
+        }
         String current  = ddlLabel.getText().replaceFirst("^Deadline: ","");
         DateTimeFormatter temp = DateTimeFormatter.ofPattern("dd-MM-yy");
         LocalDate currentDate = LocalDate.parse(current,temp);

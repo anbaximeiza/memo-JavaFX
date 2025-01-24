@@ -451,7 +451,7 @@ public class MainNavController implements Initializable{
     //when the user exit editing the name
     //planning to only allow user to edit the name when the tab is opened
     public void onFinishProjectName(AnchorPane cell){
-        String previousName = cell.getId();
+        String previousName = ((Label)cell.getChildren().get(0)).getText();
         String newName = ((TextField)cell.getChildren().get(1)).getText();
         if (newName.equals(previousName)){//when no change is detected
             resetProjectCellListener(cell);
@@ -466,11 +466,14 @@ public class MainNavController implements Initializable{
                 openedProjectSet.add(newName);
             }
             projectNameSet.remove(previousName);
-            projectTabMap.put(newName, projectTabMap.remove(previousName));
+            System.out.println(newName+" "+previousName);
+            Tab tt = projectTabMap.remove(previousName);
+            System.out.println(tt);
+            projectTabMap.put(newName,tt);
             projectTabMap.get(newName).setText(newName);
+            projectContentMap.put(newName, projectContentMap.remove(previousName));
             projectNameSet.add(newName);
             //update on the cell
-            cell.setId(newName);
             ((Label)cell.getChildren().get(0)).setText(newName);
         }
         resetProjectCellListener(cell);
@@ -565,7 +568,6 @@ public class MainNavController implements Initializable{
         if (!contentZoomUpPane.isVisible() || contentZoomUpPane == null){
             return;
         }
-        displayMessage("testttt", MessageType.SUCCESS);
         selectedCell.setEndDate(((Label)contentZoomUpPane.getChildren().get(2)).getText().replaceFirst("^Deadline: ",""));
         selectedCell.setMainGoal(((Label)contentZoomUpPane.getChildren().get(4)).getText());
         selectedCell.setMainGoalSpec(((Label)contentZoomUpPane.getChildren().get(5)).getText());
@@ -626,6 +628,7 @@ public class MainNavController implements Initializable{
                     default:
                         continue;
                 }
+                System.out.println(((Label)current.getChildren().get(0)).getText());
                 fh.exportFile(
                     projectContentMap.get(((Label)current.getChildren().get(0)).getText()), 
                     isLocked,
