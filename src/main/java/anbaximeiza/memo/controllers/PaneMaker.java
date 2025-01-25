@@ -1,17 +1,28 @@
 package anbaximeiza.memo.controllers;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -21,6 +32,8 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import anbaximeiza.memo.ContentCell;
@@ -33,6 +46,12 @@ enum MessageType {
 }
 
 public class PaneMaker {
+    private static final String TAB_DRAG_KEY = "anchorpane";
+    ObjectProperty<AnchorPane> draggingTab;
+    public PaneMaker(){
+        draggingTab = new SimpleObjectProperty<>();
+    }
+
     public AnchorPane getAnchorPane(String message, MessageType type) {
         AnchorPane result = new AnchorPane();
         result.setPrefSize(238.4, 80.8);
@@ -124,6 +143,7 @@ public class PaneMaker {
     public AnchorPane getNewProjectCell(String name) throws IOException{
         AnchorPane result = FXMLLoader.load(getClass().getResource("/fxml/projectCell.fxml"));
         ((Label)result.getChildren().get(0)).setText(name);
+        makeDraggable(result);
         return result;
     }
 
@@ -148,6 +168,7 @@ public class PaneMaker {
         Image temp =  new Image(getClass().getResourceAsStream("/img/"+ priority+"_icon.png"));
         ((ImageView)result.getChildren().get(4)).setImage(temp);
         result.setId(priority);
+        makeDraggable(result);
         return result;
     }
 
@@ -161,5 +182,59 @@ public class PaneMaker {
         for(int i = 0; i< temp.size(); i++){
            holder.getChildren().add( getSubGoalCell(temp.get(i)));
         }
+    }
+
+
+    //Amazing code from stackoverflow, slightly modified source:
+    //https://stackoverflow.com/questions/18929161/how-to-move-items-with-in-vboxchange-order-by-dragging-in-javafx
+    public void makeDraggable(AnchorPane result){
+        result.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                final Dragboard dragboard = event.getDragboard();
+                if (dragboard.hasString()
+                        && TAB_DRAG_KEY.equals(dragboard.getString())
+                        && draggingTab.get() != null) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                    event.consume();
+                }
+            }
+        });
+        result.setOnDragDropped(new EventHandler<DragEvent>() {
+            public void handle(final DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasString()) {
+                    Pane parent = (Pane) result.getParent();
+                    Object source = event.getGestureSource();
+                    int sourceIndex = parent.getChildren().indexOf(source);
+                    int targetIndex = parent.getChildren().indexOf(result);
+                    List<Node> nodes = new ArrayList<Node>(parent.getChildren());
+                    if (sourceIndex < targetIndex) {
+                        Collections.rotate(
+                                nodes.subList(sourceIndex, targetIndex + 1), -1);
+                    } else {
+                        Collections.rotate(
+                                nodes.subList(targetIndex, sourceIndex + 1), 1);
+                    }
+                    parent.getChildren().clear();
+                    parent.getChildren().addAll(nodes);
+                    success = true;
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+        result.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Dragboard dragboard = result.startDragAndDrop(TransferMode.MOVE);
+                ClipboardContent clipboardContent = new ClipboardContent();
+                clipboardContent.putString(TAB_DRAG_KEY);
+                dragboard.setContent(clipboardContent);
+                draggingTab.set(result);
+                event.consume();
+            }
+        }); 
     }
 }
