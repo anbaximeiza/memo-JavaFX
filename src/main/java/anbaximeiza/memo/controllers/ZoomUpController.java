@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
@@ -56,10 +59,20 @@ public class ZoomUpController implements Initializable{
     private ImageView hoveredEdit;
     private EventHandler<KeyEvent> textAreaHandler;
 
+    private HashMap<String, ArrayList<Node>> priorityList;
+
+    
+    
     private VBox messageBox = null;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         paneMaker = new PaneMaker();
+        priorityList = new HashMap<>(); 
+        priorityList.put("4", new ArrayList<>());
+        priorityList.put("3", new ArrayList<>());
+        priorityList.put("2", new ArrayList<>());
+        priorityList.put("1", new ArrayList<>());
+        priorityList.put("0", new ArrayList<>());
         root.visibleProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -71,7 +84,18 @@ public class ZoomUpController implements Initializable{
                     KeyFrame f1 = new KeyFrame(Duration.millis(200), e->{
                         for (Node i : subGoalBox.getChildren()){
                             addSubGoalListener((AnchorPane) i);
+                            priorityList.get(i.getId()).add(i);
                         }
+                    });
+                    Timeline tl = new Timeline(f1);
+                    tl.play();
+                } else{
+                    KeyFrame f1 = new KeyFrame(Duration.millis(200), e->{
+                        priorityList.get("0").clear();
+                        priorityList.get("1").clear();
+                        priorityList.get("2").clear();
+                        priorityList.get("3").clear();
+                        priorityList.get("4").clear();
                     });
                     Timeline tl = new Timeline(f1);
                     tl.play();
@@ -149,6 +173,13 @@ public class ZoomUpController implements Initializable{
         };
 
         goal.setOnMouseClicked(temp);
+        goal.idProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                priorityList.get(oldValue).remove(goal);
+                priorityList.get(newValue).add(goal);
+            }
+        });
     }
 
     public void onPlusImageClicked() throws IOException{
@@ -157,6 +188,7 @@ public class ZoomUpController implements Initializable{
         });
         AnchorPane cell = paneMaker.getSubGoalCell(null);
         subGoalBox.getChildren().add(cell);
+        priorityList.get("4").add(cell);
         addSubGoalListener(cell);
     }
 
@@ -259,23 +291,38 @@ public class ZoomUpController implements Initializable{
         calenderPane.setVisible(true);
     }
 
+    public void sortLowToHigh(){
+        subGoalBox.getChildren().clear();
+        subGoalBox.getChildren().addAll(priorityList.get("4"));
+        subGoalBox.getChildren().addAll(priorityList.get("3"));
+        subGoalBox.getChildren().addAll(priorityList.get("2"));
+        subGoalBox.getChildren().addAll(priorityList.get("1"));
+        subGoalBox.getChildren().addAll(priorityList.get("0"));
+    }
+
+    public void sortHighToLow(){
+        subGoalBox.getChildren().clear();
+        subGoalBox.getChildren().addAll(priorityList.get("0"));
+        subGoalBox.getChildren().addAll(priorityList.get("1"));
+        subGoalBox.getChildren().addAll(priorityList.get("2"));
+        subGoalBox.getChildren().addAll(priorityList.get("3"));
+        subGoalBox.getChildren().addAll(priorityList.get("4"));
+    }
+
     //copy from MainNav
      //message animations
-     public void messageSlideIn(AnchorPane message){
+    public void messageSlideIn(AnchorPane message){
         TranslateTransition temp =  new TranslateTransition(Duration.millis(300));
         temp.setByX(-250);
         temp.setNode(message);
         temp.play();
     }
-
     public void messageSlideOut(AnchorPane message){
         TranslateTransition temp =  new TranslateTransition(Duration.millis(300));
         temp.setByX(250);
         temp.setNode(message);
         temp.play();
     }
-
-
     //Called when a message is needed to be displayed(pop up on the down right corner)
     public void displayMessage(String message, MessageType type ){
         AnchorPane messagePane = paneMaker.getAnchorPane(message, type);
