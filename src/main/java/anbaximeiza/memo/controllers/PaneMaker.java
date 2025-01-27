@@ -185,7 +185,7 @@ public class PaneMaker {
     }
 
 
-    //Amazing code from stackoverflow, slightly modified source:
+    //Amazing code from stackoverflow, slightly modified. source:
     //https://stackoverflow.com/questions/18929161/how-to-move-items-with-in-vboxchange-order-by-dragging-in-javafx
     public void makeDraggable(AnchorPane result){
         result.setOnDragOver(new EventHandler<DragEvent>() {

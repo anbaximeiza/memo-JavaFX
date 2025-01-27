@@ -603,21 +603,27 @@ public class MainNavController implements Initializable{
     //5.main goal specification     6.Scrollpane for sub goals      7.ImageView close icon
     public void onContentDisplayCellClicked() throws IOException{
         loadingCell.setVisible(true);
-        Platform.runLater(()->{
-            contentZoomUpPane.setVisible(true);
-            ((Label)contentZoomUpPane.getChildren().get(1)).setText("Created on: "+selectedCell.getCreateDate());
-            ((Label)contentZoomUpPane.getChildren().get(2)).setText("Deadline: "+selectedCell.getEndDate());
-            ((Label)contentZoomUpPane.getChildren().get(4)).setText(selectedCell.getMainGoal());
-            ((Label)contentZoomUpPane.getChildren().get(5)).setText(selectedCell.getMainGoalSpec());
+        Thread temp = new Thread(()->{
+            Platform.runLater(()->{
+                contentZoomUpPane.setVisible(true);
+                ((Label)contentZoomUpPane.getChildren().get(1)).setText("Created on: "+selectedCell.getCreateDate());
+                ((Label)contentZoomUpPane.getChildren().get(2)).setText("Deadline: "+selectedCell.getEndDate());
+                ((Label)contentZoomUpPane.getChildren().get(4)).setText(selectedCell.getMainGoal());
+                ((Label)contentZoomUpPane.getChildren().get(5)).setText(selectedCell.getMainGoalSpec());
+            });
             VBox subGoalBox = (VBox) ((ScrollPane)contentZoomUpPane.getChildren().get(6)).getContent();
             System.out.println("working now");
-            try {
-                paneMaker.loadSubGoalVBox(subGoalBox, selectedCell);
-                loadingCell.setVisible(false);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }});
-        
+            Platform.runLater(()->{
+                try {
+                    paneMaker.loadSubGoalVBox(subGoalBox, selectedCell);
+                    loadingCell.setVisible(false);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            });
+        });
+        temp.start();
+            
     }
 
     public void onApplicationClosed(){
