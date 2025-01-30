@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -19,9 +20,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.skin.DatePickerSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -66,6 +69,12 @@ public class ZoomUpController implements Initializable{
     private VBox messageBox = null;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Platform.runLater(()->{
+            setToolTip(root.getChildren().get(9), "New sub goal");
+            setToolTip(root.getChildren().get(12), "Reselect Deadline");
+            setToolTip(root.getChildren().get(21), "Sort from low to high");
+            setToolTip(root.getChildren().get(22), "Sort from high to low");
+        });
         paneMaker = new PaneMaker();
         priorityList = new HashMap<>(); 
         priorityList.put("4", new ArrayList<>());
@@ -90,6 +99,7 @@ public class ZoomUpController implements Initializable{
                     Timeline tl = new Timeline(f1);
                     tl.play();
                 } else{
+                    calenderPane.setVisible(false);
                     KeyFrame f1 = new KeyFrame(Duration.millis(200), e->{
                         priorityList.get("0").clear();
                         priorityList.get("1").clear();
@@ -309,6 +319,21 @@ public class ZoomUpController implements Initializable{
         subGoalBox.getChildren().addAll(priorityList.get("4"));
     }
 
+    public void sinkCompleted(){
+        ArrayList<AnchorPane> completed = new ArrayList<>();
+        for (int i=0; i< subGoalBox.getChildren().size(); i++){
+            AnchorPane node = (AnchorPane) subGoalBox.getChildren().get(i);
+            Boolean isCompleted = ((CheckBox)node.getChildren().get(2)).isSelected();
+            if (isCompleted){
+                System.out.println(i);
+                completed.add(node);
+                subGoalBox.getChildren().remove(node);
+                i--;
+            }
+        }
+        subGoalBox.getChildren().addAll(completed);
+    }
+
     //copy from MainNav
      //message animations
     public void messageSlideIn(AnchorPane message){
@@ -335,4 +360,8 @@ public class ZoomUpController implements Initializable{
 
     }
 
+    public void setToolTip(Node node, String text){
+        Tooltip tp = new Tooltip(text);
+        Tooltip.install(node,tp);
+    }
 }
