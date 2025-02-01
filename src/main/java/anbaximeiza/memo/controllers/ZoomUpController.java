@@ -16,10 +16,12 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -32,7 +34,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 public class ZoomUpController implements Initializable{
@@ -54,6 +60,8 @@ public class ZoomUpController implements Initializable{
     @FXML private ImageView loadingImage;
     @FXML private VBox  orderDisplayBox;
 
+    @FXML private AnchorPane statusPane;
+
     private AnchorPane selectedGoal;
     private DatePicker ddlPicker;
 
@@ -63,6 +71,9 @@ public class ZoomUpController implements Initializable{
     private EventHandler<KeyEvent> textAreaHandler;
 
     private HashMap<String, ArrayList<Node>> priorityList;
+
+    private Button status;
+    private final String buttonStyle = "-fx-border-color: white; -fx-border-radius: 5; -fx-border-width: 2; -fx-background-radius: 5;";
 
     
     
@@ -333,6 +344,64 @@ public class ZoomUpController implements Initializable{
         }
         subGoalBox.getChildren().addAll(completed);
     }
+
+    public void onStatusButtonClicked(ActionEvent event){
+        onTextAreaEditingFinish();
+        Button select = (Button) event.getSource();
+        if (select==status){
+            statusPane.setId("");
+            status.setStyle(buttonStyle);
+            status.setTextFill(Color.BLACK);
+            status = null;
+            return;
+        }
+        switch (select.getId()) {
+            case "b1":
+                select.setStyle(buttonStyle+"-fx-background-color: #00d5ff;");
+                break;
+            case "b2":
+                select.setStyle(buttonStyle+"-fx-background-color: #00ff00;");
+                break;
+            case "b3":
+                select.setStyle(buttonStyle+"-fx-background-color: #ff0022;");
+                break;
+            default:
+                select.setStyle(buttonStyle+"-fx-background-color: #ee00ff;");
+                break;
+        }
+        if (status!=null){
+            status.setStyle(buttonStyle);
+            status.setTextFill(Color.BLACK);
+        }
+        statusPane.setId(select.getId().replace("b", ""));
+        select.setTextFill(Color.WHITE);
+        status = select;
+    }
+
+    public void onStatusButtonEnter(MouseEvent event){
+        Button select= (Button) event.getSource();
+        switch (select.getId()) {
+            case "b1":
+                select.setBackground(Background.fill(Color.rgb(0, 213, 255)));
+                break;
+            case "b2":
+                select.setBackground(Background.fill(Color.rgb(0, 255, 0)));
+                break;
+            case "b3":
+                select.setBackground(Background.fill(Color.rgb(255, 0, 34)));
+                break;
+            default:
+                select.setBackground(Background.fill(Color.rgb(238, 0, 255)));
+                break;
+        }
+    }
+
+    public void onStatusButtonExit(MouseEvent event){
+        Button select = ((Button)event.getSource());
+        if (select!=status){
+            select.setBackground(Background.fill(Color.GREY));
+        }
+   }
 
     //copy from MainNav
      //message animations

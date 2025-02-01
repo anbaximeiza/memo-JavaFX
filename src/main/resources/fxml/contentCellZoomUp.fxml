@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
@@ -13,10 +14,30 @@
 
 <AnchorPane fx:id="root" layoutY="29.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.4" prefWidth="672.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anbaximeiza.memo.controllers.ZoomUpController">
    <children>
-      <ImageView id="placeholder" fitHeight="259.0" fitWidth="257.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true" visible="false">
-         <image>
-            <Image url="@../img/loading.gif" />
-         </image></ImageView>
+      <AnchorPane fx:id="statusPane" layoutX="375.0" layoutY="68.0" prefHeight="29.0" prefWidth="235.0" style="-fx-border-color: black;">
+         <children>
+            <Button id="b1" layoutX="3.0" layoutY="1.0" mnemonicParsing="false" onAction="#onStatusButtonClicked" onMouseEntered="#onStatusButtonEnter" onMouseExited="#onStatusButtonExit" prefHeight="30.0" prefWidth="58.0" style="-fx-border-color: white; -fx-border-radius: 5; -fx-border-width: 2; -fx-background-radius: 5;" text="Ongoing">
+               <font>
+                  <Font size="9.5" />
+               </font>
+            </Button>
+            <Button id="b2" layoutX="61.0" layoutY="1.0" mnemonicParsing="false" onAction="#onStatusButtonClicked" onMouseEntered="#onStatusButtonEnter" onMouseExited="#onStatusButtonExit" prefHeight="30.0" prefWidth="56.0" style="-fx-border-color: white; -fx-border-radius: 5; -fx-border-width: 2; -fx-background-radius: 5;" text="Finished">
+               <font>
+                  <Font size="9.5" />
+               </font>
+            </Button>
+            <Button id="b3" layoutX="119.0" layoutY="1.0" mnemonicParsing="false" onAction="#onStatusButtonClicked" onMouseEntered="#onStatusButtonEnter" onMouseExited="#onStatusButtonExit" prefHeight="30.0" prefWidth="56.0" style="-fx-border-color: white; -fx-border-radius: 5; -fx-border-width: 2; -fx-background-radius: 5;" text="Waiting">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Button>
+            <Button id="b4" layoutX="177.0" layoutY="1.0" mnemonicParsing="false" onAction="#onStatusButtonClicked" onMouseEntered="#onStatusButtonEnter" onMouseExited="#onStatusButtonExit" prefHeight="30.0" prefWidth="56.0" style="-fx-border-color: white; -fx-border-radius: 5; -fx-border-width: 2; -fx-background-radius: 5;" text="Stuck">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
       <Label layoutX="378.0" layoutY="15.0" text="Created on: yyyy/MM/dd">
          <font>
             <Font size="18.0" />
@@ -27,19 +48,19 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="86.0" layoutX="375.0" layoutY="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.9" width="232.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="52.0" layoutX="375.0" layoutY="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.9" width="235.0" />
       <Label fx:id="titleLabel" alignment="TOP_LEFT" layoutX="13.0" layoutY="15.0" onMouseEntered="#onTitleHovered" onMouseExited="#onLabelUnHovered" prefHeight="86.0" prefWidth="358.0" style="-fx-border-color: black;" text=" Main goal title" wrapText="true">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label fx:id="specLabel" alignment="TOP_LEFT" layoutX="15.0" layoutY="113.0" onMouseEntered="#onSpecHovered" onMouseExited="#onLabelUnHovered" prefHeight="162.0" prefWidth="593.0" style="-fx-border-color: black;" text="Main goal specification" wrapText="true">
+      <Label fx:id="specLabel" alignment="TOP_LEFT" layoutX="15.0" layoutY="113.0" onMouseEntered="#onSpecHovered" onMouseExited="#onLabelUnHovered" prefHeight="139.0" prefWidth="594.0" style="-fx-border-color: black;" text="Main goal specification" wrapText="true">
          <font>
             <Font size="15.0" />
          </font></Label>
-      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="149.0" layoutY="294.0" prefHeight="227.0" prefWidth="458.0" style="-fx-border-color: black;" vbarPolicy="NEVER">
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="149.0" layoutY="269.0" prefHeight="257.0" prefWidth="458.0" style="-fx-border-color: black;" vbarPolicy="NEVER">
          <content>
-            <VBox fx:id="subGoalBox" prefHeight="241.0" prefWidth="457.0" />
+            <VBox fx:id="subGoalBox" prefHeight="250.0" prefWidth="454.0" />
          </content>
       </ScrollPane>
       <ImageView fitHeight="36.0" fitWidth="38.0" layoutX="623.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
@@ -52,7 +73,7 @@
             <Image url="@../img/loading.gif" />
          </image>
       </ImageView>
-      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="615.0" layoutY="294.0" onMouseClicked="#onPlusImageClicked" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="615.0" layoutY="270.0" onMouseClicked="#onPlusImageClicked" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/new_icon.png" />
          </image>
@@ -67,7 +88,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <ImageView fitHeight="36.0" fitWidth="50.0" layoutX="567.0" layoutY="61.0" onMouseClicked="#onReselectDeadLine" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="36.0" fitWidth="50.0" layoutX="615.0" layoutY="63.0" onMouseClicked="#onReselectDeadLine" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/date_change_icon.png" />
          </image>
@@ -78,7 +99,7 @@
          </font>
       </Label>
       <Label layoutX="21.0" layoutY="102.0" style="-fx-background-color: white;" text="Specification" />
-      <Label layoutX="155.0" layoutY="280.0" style="-fx-background-color: white;" text="Sub-goals" />
+      <Label layoutX="155.0" layoutY="255.0" style="-fx-background-color: white;" text="Sub-goals" />
       <TextArea fx:id="titleTextArea" layoutX="1.0" layoutY="10.0" onMouseEntered="#onTitleHovered" onMouseExited="#onLabelUnHovered" prefHeight="94.0" prefWidth="371.0" visible="false" wrapText="true">
          <font>
             <Font name="System Bold" size="20.0" />
@@ -93,23 +114,23 @@
             <Image url="@../img/rename_icon.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="specEdit" fitHeight="36.0" fitWidth="29.0" layoutX="573.0" layoutY="239.0" onMouseClicked="#onSpecEditClicked" onMouseEntered="#onSpecEditHovered" onMouseExited="#onEditUnHovered" opacity="0.25" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="specEdit" fitHeight="36.0" fitWidth="29.0" layoutX="573.0" layoutY="215.0" onMouseClicked="#onSpecEditClicked" onMouseEntered="#onSpecEditHovered" onMouseExited="#onEditUnHovered" opacity="0.25" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../img/rename_icon.png" />
          </image>
       </ImageView>
-      <AnchorPane fx:id="calenderPane" layoutX="351.0" layoutY="61.0" prefHeight="176.0" prefWidth="190.0" visible="false" />
-      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="615.0" layoutY="340.0" onMouseClicked="#sortLowToHigh" pickOnBounds="true" preserveRatio="true">
+      <AnchorPane fx:id="calenderPane" layoutX="399.0" layoutY="63.0" prefHeight="176.0" prefWidth="190.0" visible="false" />
+      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="615.0" layoutY="316.0" onMouseClicked="#sortLowToHigh" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/order_low_high.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="615.0" layoutY="386.0" onMouseClicked="#sortHighToLow" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="615.0" layoutY="362.0" onMouseClicked="#sortHighToLow" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/order_high_low.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="615.0" layoutY="432.0" onMouseClicked="#sinkCompleted" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="615.0" layoutY="408.0" onMouseClicked="#sinkCompleted" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/completed_bottom.png" />
          </image>
