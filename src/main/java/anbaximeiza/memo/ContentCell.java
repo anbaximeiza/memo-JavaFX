@@ -16,6 +16,7 @@ public class ContentCell {
     //colors
     private String createDate;
     private String endDate = "null";
+    private int status = 0;
 
     public ContentCell(AnchorPane holder){
         this.holder = holder;
@@ -84,5 +85,13 @@ public class ContentCell {
 
     public void setCreatetDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

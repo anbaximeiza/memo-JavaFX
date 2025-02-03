@@ -14,7 +14,7 @@
 
 <AnchorPane fx:id="root" layoutY="29.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.4" prefWidth="672.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="anbaximeiza.memo.controllers.ZoomUpController">
    <children>
-      <AnchorPane fx:id="statusPane" layoutX="375.0" layoutY="68.0" prefHeight="29.0" prefWidth="235.0" style="-fx-border-color: black;">
+      <AnchorPane id="0" fx:id="statusPane" layoutX="375.0" layoutY="68.0" prefHeight="29.0" prefWidth="235.0" style="-fx-border-color: black;">
          <children>
             <Button id="b1" layoutX="3.0" layoutY="1.0" mnemonicParsing="false" onAction="#onStatusButtonClicked" onMouseEntered="#onStatusButtonEnter" onMouseExited="#onStatusButtonExit" prefHeight="30.0" prefWidth="58.0" style="-fx-border-color: white; -fx-border-radius: 5; -fx-border-width: 2; -fx-background-radius: 5;" text="Ongoing">
                <font>

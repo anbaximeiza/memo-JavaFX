@@ -23,6 +23,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
@@ -574,6 +575,7 @@ public class MainNavController implements Initializable{
         if (!contentZoomUpPane.isVisible() || contentZoomUpPane == null){
             return;
         }
+        selectedCell.setStatus(Integer.parseInt(contentZoomUpPane.getChildren().get(0).getId()));
         selectedCell.setEndDate(((Label)contentZoomUpPane.getChildren().get(2)).getText().replaceFirst("^Deadline: ",""));
         selectedCell.setMainGoal(((Label)contentZoomUpPane.getChildren().get(4)).getText());
         selectedCell.setMainGoalSpec(((Label)contentZoomUpPane.getChildren().get(5)).getText());
@@ -606,6 +608,7 @@ public class MainNavController implements Initializable{
         Thread temp = new Thread(()->{
             Platform.runLater(()->{
                 contentZoomUpPane.setVisible(true);
+                contentZoomUpPane.getChildren().get(0).setId(String.valueOf(selectedCell.getStatus()));
                 ((Label)contentZoomUpPane.getChildren().get(1)).setText("Created on: "+selectedCell.getCreateDate());
                 ((Label)contentZoomUpPane.getChildren().get(2)).setText("Deadline: "+selectedCell.getEndDate());
                 ((Label)contentZoomUpPane.getChildren().get(4)).setText(selectedCell.getMainGoal());

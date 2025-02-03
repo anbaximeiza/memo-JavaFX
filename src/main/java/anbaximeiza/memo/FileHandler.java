@@ -62,6 +62,7 @@ public class FileHandler {
                 String[] date = reader.readLine().split(",");
                 holder.setEndDate(date[1]);
                 holder.setCreatetDate(date[0]);
+                holder.setStatus(Integer.parseInt(date[2]));
                 holder.setMainGoal(reader.readLine());
                 holder.setMainGoalSpec(reader.readLine());
                 int subGoalSize = Integer.parseInt(reader.readLine());
@@ -95,9 +96,10 @@ public class FileHandler {
 
     public void exportFile(ArrayList<ContentCell> content, Boolean isLocked, String projectName){
         LinkedList<String> file =  new LinkedList<>();
+        //first line of file, states the size of the content cell list and whether the project is locked.
         file.add(content.size()+","+String.valueOf(isLocked));
         for (ContentCell cell : content){
-            file.add(cell.getCreateDate()+","+cell.getEndDate());
+            file.add(cell.getCreateDate()+","+cell.getEndDate()+","+cell.getStatus());
             file.add(cell.getMainGoal());
             file.add(cell.getMainGoalSpec());
             ArrayList<SubGoal> subs = cell.getSubGoals();

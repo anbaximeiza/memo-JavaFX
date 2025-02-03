@@ -107,7 +107,30 @@ public class ZoomUpController implements Initializable{
                             priorityList.get(i.getId()).add(i);
                         }
                     });
-                    Timeline tl = new Timeline(f1);
+                    KeyFrame f2 = new KeyFrame(Duration.millis(210), e->{
+                        int index = Integer.parseInt(statusPane.getId());
+                        Button select = (Button) statusPane.getChildren().get(index-1);
+                        switch (index) {
+                            case 1:
+                                select.setStyle(buttonStyle+"-fx-background-color: #00d5ff;");
+                                break;
+                            case 2:
+                                select.setStyle(buttonStyle+"-fx-background-color: #00ff00;");
+                                break;
+                            case 3:
+                                select.setStyle(buttonStyle+"-fx-background-color: #ff0022;");
+                                break;
+                            case 4:
+                                select.setStyle(buttonStyle+"-fx-background-color: #ee00ff;");
+                                break;
+                            default:
+                                status = null;
+                                return;
+                        }
+                        status = select;
+                        select.setTextFill(Color.WHITE);
+                    });
+                    Timeline tl = new Timeline(f1,f2);
                     tl.play();
                 } else{
                     calenderPane.setVisible(false);
@@ -118,6 +141,10 @@ public class ZoomUpController implements Initializable{
                         priorityList.get("3").clear();
                         priorityList.get("4").clear();
                     });
+                    for (Node node : statusPane.getChildren()){
+                        node.setStyle(buttonStyle);
+                        ((Button)node).setTextFill(Color.BLACK);
+                    }
                     Timeline tl = new Timeline(f1);
                     tl.play();
                 }
