@@ -62,6 +62,8 @@ public class ZoomUpController implements Initializable{
 
     @FXML private AnchorPane statusPane;
 
+    @FXML private Label ratioLabel;
+
     private AnchorPane selectedGoal;
     private DatePicker ddlPicker;
 
@@ -73,6 +75,10 @@ public class ZoomUpController implements Initializable{
     private HashMap<String, ArrayList<Node>> priorityList;
 
     private Button status;
+
+    private int totalSubgoals;
+    private int completedSubgoals;
+    //default style for status button
     private final String buttonStyle = "-fx-border-color: white; -fx-border-radius: 5; -fx-border-width: 2; -fx-background-radius: 5;";
 
     
@@ -101,14 +107,28 @@ public class ZoomUpController implements Initializable{
                     if (messageBox ==null){
                         messageBox = (VBox) ((AnchorPane)root.getParent()).getChildren().get(5);
                     }
+
                     KeyFrame f1 = new KeyFrame(Duration.millis(200), e->{
+                        totalSubgoals = subGoalBox.getChildren().size();
+                        completedSubgoals = 0;
                         for (Node i : subGoalBox.getChildren()){
                             addSubGoalListener((AnchorPane) i);
                             priorityList.get(i.getId()).add(i);
+                            CheckBox temp = (CheckBox) ((AnchorPane)i).getChildren().get(2);
+                            if (temp.isSelected()){
+                                completedSubgoals++;
+                            }
                         }
+                        ratioLabel.setText(totalSubgoals+"/"+completedSubgoals);
                     });
+
+                    //initializing status button style
                     KeyFrame f2 = new KeyFrame(Duration.millis(210), e->{
                         int index = Integer.parseInt(statusPane.getId());
+                        if (index==0){
+                            status = null;
+                            return;
+                        }
                         Button select = (Button) statusPane.getChildren().get(index-1);
                         switch (index) {
                             case 1:
@@ -117,10 +137,10 @@ public class ZoomUpController implements Initializable{
                             case 2:
                                 select.setStyle(buttonStyle+"-fx-background-color: #00ff00;");
                                 break;
-                            case 3:
+                            case 4:
                                 select.setStyle(buttonStyle+"-fx-background-color: #ff0022;");
                                 break;
-                            case 4:
+                            case 3:
                                 select.setStyle(buttonStyle+"-fx-background-color: #ee00ff;");
                                 break;
                             default:
@@ -220,6 +240,24 @@ public class ZoomUpController implements Initializable{
             } 
         };
 
+        goal.getChildren().get(9).addEventHandler(MouseEvent.MOUSE_CLICKED,
+            new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                totalSubgoals--;
+                AnchorPane deletedPane = (AnchorPane) ((Node)event.getSource()).getParent();
+                priorityList.get(deletedPane.getId()).remove(deletedPane);
+                CheckBox cb = (CheckBox) deletedPane.getChildren().get(2);
+                if (cb.isSelected()){
+                    completedSubgoals--;
+                }
+                ratioLabel.setText(totalSubgoals+"/"+completedSubgoals);
+                System.out.println("I'm working");
+            }
+            
+        });
+
         goal.setOnMouseClicked(temp);
         goal.idProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -227,6 +265,20 @@ public class ZoomUpController implements Initializable{
                 priorityList.get(oldValue).remove(goal);
                 priorityList.get(newValue).add(goal);
             }
+        });
+
+        CheckBox cb = (CheckBox) goal.getChildren().get(2);
+        cb.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue){
+                    completedSubgoals = completedSubgoals+1;
+                } else{
+                    completedSubgoals = completedSubgoals-1;
+                }
+                ratioLabel.setText(totalSubgoals+"/"+completedSubgoals);
+            }
+            
         });
     }
 
@@ -238,6 +290,8 @@ public class ZoomUpController implements Initializable{
         subGoalBox.getChildren().add(cell);
         priorityList.get("4").add(cell);
         addSubGoalListener(cell);
+        totalSubgoals++;
+        ratioLabel.setText(totalSubgoals+"/"+completedSubgoals);
     }
 
     public void resetSubGoalCell(){
@@ -376,7 +430,7 @@ public class ZoomUpController implements Initializable{
         onTextAreaEditingFinish();
         Button select = (Button) event.getSource();
         if (select==status){
-            statusPane.setId("");
+            statusPane.setId("0");
             status.setStyle(buttonStyle);
             status.setTextFill(Color.BLACK);
             status = null;
@@ -389,7 +443,7 @@ public class ZoomUpController implements Initializable{
             case "b2":
                 select.setStyle(buttonStyle+"-fx-background-color: #00ff00;");
                 break;
-            case "b3":
+            case "b4":
                 select.setStyle(buttonStyle+"-fx-background-color: #ff0022;");
                 break;
             default:
@@ -409,24 +463,24 @@ public class ZoomUpController implements Initializable{
         Button select= (Button) event.getSource();
         switch (select.getId()) {
             case "b1":
-                select.setBackground(Background.fill(Color.rgb(0, 213, 255)));
-                break;
-            case "b2":
-                select.setBackground(Background.fill(Color.rgb(0, 255, 0)));
-                break;
-            case "b3":
-                select.setBackground(Background.fill(Color.rgb(255, 0, 34)));
-                break;
-            default:
-                select.setBackground(Background.fill(Color.rgb(238, 0, 255)));
-                break;
+            select.setStyle(buttonStyle+"-fx-background-color: #00d5ff;");
+            break;
+        case "b2":
+            select.setStyle(buttonStyle+"-fx-background-color: #00ff00;");
+            break;
+        case "b4":
+            select.setStyle(buttonStyle+"-fx-background-color: #ff0022;");
+            break;
+        default:
+            select.setStyle(buttonStyle+"-fx-background-color: #ee00ff;");
+            break;
         }
     }
 
     public void onStatusButtonExit(MouseEvent event){
         Button select = ((Button)event.getSource());
         if (select!=status){
-            select.setBackground(Background.fill(Color.GREY));
+            select.setStyle(buttonStyle);
         }
    }
 

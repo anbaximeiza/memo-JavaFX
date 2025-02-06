@@ -83,9 +83,9 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label alignment="TOP_CENTER" layoutX="14.0" layoutY="288.0" prefHeight="58.0" prefWidth="119.0" text="Sub-goals to be completed:" wrapText="true">
+      <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="305.0" prefHeight="58.0" prefWidth="131.0" text="Total/Completed" wrapText="true">
          <font>
-            <Font size="16.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <ImageView fitHeight="36.0" fitWidth="50.0" layoutX="615.0" layoutY="63.0" onMouseClicked="#onReselectDeadLine" pickOnBounds="true" preserveRatio="true">
@@ -135,5 +135,10 @@
             <Image url="@../img/completed_bottom.png" />
          </image>
       </ImageView>
+      <Label fx:id="ratioLabel" alignment="TOP_CENTER" layoutX="28.0" layoutY="332.0" text="99/99">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
