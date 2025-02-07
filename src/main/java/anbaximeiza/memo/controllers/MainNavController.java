@@ -229,7 +229,7 @@ public class MainNavController implements Initializable{
             int gridSize = 0;
             for (ContentCell cell: projectContentMap.get(key)){
                 ((ImageView)cell.getHolder().getChildren().get(0)).setId(key);
-                cell.getHolder().getChildren().get(4).setOnMouseClicked(onCellHolderClicked);
+                cell.getHolder().getChildren().get(cell.getHolder().getChildren().size()-1).setOnMouseClicked(onCellHolderClicked);
                 if (gridSize%5 == 0){
                     grid.getRowConstraints().add(new RowConstraints(130));
                 }
@@ -529,7 +529,7 @@ public class MainNavController implements Initializable{
         int temp = projectContentMap.get(currentTab.getText()).size();
         ContentCell ugood = paneMaker.getContentCell();
         ugood.selfUpdate(selectedPane.getChildren().size()+1);//the parameter passing in is pointless at the moment
-        ugood.getHolder().getChildren().get(4).setOnMouseClicked(new EventHandler<Event>() {
+        ugood.getHolder().getChildren().get(ugood.getHolder().getChildren().size()-1).setOnMouseClicked(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
                 AnchorPane selectedPane = (AnchorPane) ((Rectangle)event.getSource()).getParent();
@@ -599,7 +599,7 @@ public class MainNavController implements Initializable{
         //remove all the subgoals within the subgoal display
         subGoalList.clear();
         
-
+        selectedCell.selfUpdate(0);
         contentZoomUpPane.setVisible(false);
 
     }

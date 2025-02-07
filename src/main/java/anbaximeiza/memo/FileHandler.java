@@ -37,7 +37,7 @@ public class FileHandler {
         for (File f : directoryListing){
             String name = f.getName();
             projectContentMap.put(
-                name.replace(".txt", "")
+                name.replace(".txt", "")//project name
                 ,loadSingleProject(name)
                 );
             projectNameSet.add(name.replace(".txt", ""));
@@ -77,8 +77,8 @@ public class FileHandler {
                     }
                     sub.setContent(reader.readLine());
                     holder.appendSubGoals(sub);
-                    holder.selfUpdate(i);
                 }
+                holder.selfUpdate(i);
                 result.add(holder);
             }
             reader.close();

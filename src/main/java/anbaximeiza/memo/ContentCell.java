@@ -1,8 +1,12 @@
 package anbaximeiza.memo;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 public class ContentCell {
@@ -30,6 +34,30 @@ public class ContentCell {
     }
 
     public void selfUpdate(int index){
+        ((Label)holder.getChildren().get(1)).setText(endDate);
+        ((Label)holder.getChildren().get(2)).setText(mainGoal);
+        int completedCount = 0;
+        for (SubGoal goal:subGoals){
+            if (goal.isCompleted()){
+                completedCount++;
+            }
+        }
+
+        // index 4 & 5 for overdue hint
+        if (!endDate.equals("null")){
+            DateTimeFormatter temp = DateTimeFormatter.ofPattern("dd-MM-yy");
+            LocalDate eD = LocalDate.parse(endDate,temp);
+    
+            if (eD.isBefore(LocalDate.now())){
+                holder.getChildren().get(4).setVisible(true);
+                holder.getChildren().get(5).setVisible(true);
+            }
+        }
+
+        ((Label)holder.getChildren().get(3)).setText(subGoals.size()+"/"+completedCount);
+
+        Image buffer= new Image(getClass().getResourceAsStream("/img/status_"+status+".png"));
+        ((ImageView)holder.getChildren().get(0)).setImage(buffer);
 
     }
 

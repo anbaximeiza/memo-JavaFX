@@ -108,14 +108,12 @@ public class PaneMaker {
         gridPane.setLayoutX(0);
         gridPane.setLayoutY(0);
         scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
-        
-        String hex = String.format("#%02x%02x%02x", rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        gridPane.setStyle("-fx-background-color: "+hex+";");
 
         ColumnConstraints cc = new ColumnConstraints();
         cc.setPercentWidth(20);
         gridPane.getColumnConstraints().addAll(cc,cc,cc,cc,cc);
         gridPane.getRowConstraints().add(new RowConstraints(130));
+        gridPane.setGridLinesVisible(true);
 
         //gridPane.setGridLinesVisible(true);
 

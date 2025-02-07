@@ -14,17 +14,24 @@
             <Image url="@../img/status_0.png" />
          </image>
       </ImageView>
-      <Label alignment="TOP_RIGHT" layoutX="6.0" layoutY="10.0" prefHeight="22.0" prefWidth="83.0" text="dd-MM-yy">
+      <Label alignment="CENTER" layoutX="6.0" layoutY="10.0" prefHeight="22.0" prefWidth="83.0" text="99-99-99">
          <font>
             <Font size="15.0" />
          </font></Label>
-      <Label alignment="TOP_LEFT" layoutX="8.0" layoutY="34.0" prefHeight="52.0" prefWidth="117.0" text="MainGoal" wrapText="true">
-         <font>
-            <Font size="13.0" />
-         </font></Label>
-      <Label alignment="CENTER" layoutX="9.0" layoutY="94.0" prefHeight="29.0" prefWidth="83.0" text="99/99">
+      <Label alignment="TOP_LEFT" layoutX="13.0" layoutY="34.0" prefHeight="53.0" prefWidth="108.0" text="MainGoal" wrapText="true" />
+      <Label alignment="CENTER" layoutX="9.0" layoutY="92.0" prefHeight="22.0" prefWidth="83.0" text="99/99">
          <font>
             <Font size="24.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="130.0" fitWidth="127.0" layoutX="2.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/overdue_banner.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="78.0" layoutY="21.0" rotate="45.0" text="OVERDUE" visible="false">
+         <font>
+            <Font name="System Bold" size="10.5" />
          </font>
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />
