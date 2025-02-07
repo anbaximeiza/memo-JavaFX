@@ -253,7 +253,6 @@ public class ZoomUpController implements Initializable{
                     completedSubgoals--;
                 }
                 ratioLabel.setText(totalSubgoals+"/"+completedSubgoals);
-                System.out.println("I'm working");
             }
             
         });

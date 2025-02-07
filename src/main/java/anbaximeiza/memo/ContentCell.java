@@ -31,9 +31,6 @@ public class ContentCell {
 
     public void selfUpdate(int index){
 
-        ((Label)holder.getChildren().get(2)).setText(createDate+ "|" + endDate);
-        ((Label)holder.getChildren().get(4)).setText("1- ssssss");
-
     }
 
     public AnchorPane getHolder() {

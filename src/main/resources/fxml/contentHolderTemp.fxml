@@ -9,39 +9,22 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="134.4" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fitHeight="130.0" fitWidth="126.0" layoutX="4.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="120.0" fitWidth="118.0" layoutX="8.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../img/contentHolder.png" />
+            <Image url="@../img/status_0.png" />
          </image>
       </ImageView>
-      <Label alignment="CENTER" layoutX="9.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="20.0" text="99">
+      <Label alignment="TOP_RIGHT" layoutX="6.0" layoutY="10.0" prefHeight="22.0" prefWidth="83.0" text="dd-MM-yy">
          <font>
-            <Font size="17.0" />
-         </font>
-      </Label>
-      <Label alignment="TOP_RIGHT" layoutX="35.0" layoutY="5.0" text="24-10-10|24-88-99">
-         <font>
-            <Font size="10.0" />
+            <Font size="15.0" />
          </font></Label>
-      <Label alignment="TOP_LEFT" layoutX="14.0" layoutY="34.0" prefHeight="52.0" prefWidth="106.0" text="MainGoal" wrapText="true" />
-      <Label alignment="TOP_LEFT" layoutX="42.0" layoutY="90.0" prefHeight="9.0" prefWidth="84.0" text="1-subGoal">
+      <Label alignment="TOP_LEFT" layoutX="8.0" layoutY="34.0" prefHeight="52.0" prefWidth="117.0" text="MainGoal" wrapText="true">
          <font>
-            <Font size="9.0" />
-         </font>
-      </Label>
-      <Label alignment="TOP_LEFT" layoutX="42.0" layoutY="101.0" prefHeight="9.0" prefWidth="84.0" text="2-subGoal">
+            <Font size="13.0" />
+         </font></Label>
+      <Label alignment="CENTER" layoutX="9.0" layoutY="94.0" prefHeight="29.0" prefWidth="83.0" text="99/99">
          <font>
-            <Font size="9.0" />
-         </font>
-      </Label>
-      <Label alignment="TOP_LEFT" layoutX="42.0" layoutY="113.0" prefHeight="9.0" prefWidth="84.0" text="3-subGoal">
-         <font>
-            <Font size="9.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" layoutX="6.0" layoutY="96.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="34.0" text="99/99">
-         <font>
-            <Font size="11.0" />
+            <Font size="24.0" />
          </font>
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />

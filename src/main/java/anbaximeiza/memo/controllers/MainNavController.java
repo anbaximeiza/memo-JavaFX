@@ -210,7 +210,7 @@ public class MainNavController implements Initializable{
             @Override
             public void handle(Event event) {
                 AnchorPane selectedPane = (AnchorPane) ((Rectangle)event.getSource()).getParent();
-                String key = selectedPane.getChildren().get(0).getId();
+                String key = ((GridPane)selectedPane.getParent()).getId();
                 int col = GridPane.getColumnIndex(selectedPane);
                 int row = GridPane.getRowIndex(selectedPane);
                 selectedCell = projectContentMap.get(key).get(row*5+col);
@@ -229,7 +229,7 @@ public class MainNavController implements Initializable{
             int gridSize = 0;
             for (ContentCell cell: projectContentMap.get(key)){
                 ((ImageView)cell.getHolder().getChildren().get(0)).setId(key);
-                cell.getHolder().getChildren().get(8).setOnMouseClicked(onCellHolderClicked);
+                cell.getHolder().getChildren().get(4).setOnMouseClicked(onCellHolderClicked);
                 if (gridSize%5 == 0){
                     grid.getRowConstraints().add(new RowConstraints(130));
                 }
@@ -254,7 +254,7 @@ public class MainNavController implements Initializable{
         Tooltip.install((projectCell.getChildren().get(8)),tp);
         projectList.getChildren().add(projectCell);
         Tab contentPane;
-        //create new one is a new project is created, else use the exisiting one(when starting the application)
+        //create new one is when a new project is created, else use the exisiting one(when starting the application)
         if (projectTabMap.containsKey(itemName)){
             contentPane = projectTabMap.get(itemName);
             if (fh.getIsLockedStatus(itemName)){
@@ -272,6 +272,9 @@ public class MainNavController implements Initializable{
             contentPane = paneMaker.getContentTab(itemName);
             projectContentMap.put(itemName, new ArrayList<ContentCell>());
         }
+
+        //setId on the grid pane 
+        ((ScrollPane)contentPane.getContent()).getContent().setId(itemName);
         
 
         contentPane.setOnClosed(new EventHandler<Event>() {
@@ -475,6 +478,7 @@ public class MainNavController implements Initializable{
             projectNameSet.remove(previousName);
             System.out.println(newName+" "+previousName);
             Tab tt = projectTabMap.remove(previousName);
+            ((ScrollPane)tt.getContent()).getContent().setId(newName);
             System.out.println(tt);
             projectTabMap.put(newName,tt);
             projectTabMap.get(newName).setText(newName);
@@ -525,12 +529,11 @@ public class MainNavController implements Initializable{
         int temp = projectContentMap.get(currentTab.getText()).size();
         ContentCell ugood = paneMaker.getContentCell();
         ugood.selfUpdate(selectedPane.getChildren().size()+1);//the parameter passing in is pointless at the moment
-        ((ImageView)ugood.getHolder().getChildren().get(0)).setId(currentTab.getText());
-        ugood.getHolder().getChildren().get(8).setOnMouseClicked(new EventHandler<Event>() {
+        ugood.getHolder().getChildren().get(4).setOnMouseClicked(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
                 AnchorPane selectedPane = (AnchorPane) ((Rectangle)event.getSource()).getParent();
-                String key = selectedPane.getChildren().get(0).getId();
+                String key = selectedPane.getParent().getId();
                 int col = GridPane.getColumnIndex(selectedPane);
                 int row = GridPane.getRowIndex(selectedPane);
                 selectedCell = projectContentMap.get(key).get(row*5+col);
