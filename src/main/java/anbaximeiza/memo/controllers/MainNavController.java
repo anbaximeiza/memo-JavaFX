@@ -40,6 +40,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
@@ -212,18 +213,13 @@ public class MainNavController implements Initializable{
         for (String key: projectNameSet){
             Tab displayingTab = paneMaker.getContentTab(key);
             ScrollPane scroll = (ScrollPane) displayingTab.getContent();
-            GridPane grid = (GridPane)(scroll).getContent();
-            int gridSize = 0;
+            FlowPane grid = (FlowPane)(scroll).getContent();
             for (ContentCell cell: projectContentMap.get(key)){
                 ((ImageView)cell.getHolder().getChildren().get(0)).setId(key);
                 Platform.runLater(()->{
                     setContenCellDisplayHandlers(cell);
                 });
-                if (gridSize%5 == 0){
-                    grid.getRowConstraints().add(new RowConstraints(130));
-                }
-                grid.add(cell.getHolder(),gridSize%5,gridSize/5);
-                gridSize++;
+                grid.getChildren().add(cell.getHolder());
             }
             projectTabMap.put(key, displayingTab);
             addProjectList(key);
@@ -514,18 +510,17 @@ public class MainNavController implements Initializable{
     public void onClickNewNote() throws MalformedURLException, IOException{
         Tab currentTab = contentDisplayPane.getSelectionModel().getSelectedItem();
         ScrollPane tempPane = ((ScrollPane)currentTab.getContent());
-        GridPane selectedPane = (GridPane)tempPane.getContent();
+        FlowPane selectedPane = (FlowPane)tempPane.getContent();
         int temp = projectContentMap.get(currentTab.getText()).size();
         ContentCell ugood = paneMaker.getContentCell();
         ugood.selfUpdate(selectedPane.getChildren().size()+1);//the parameter passing in is pointless at the moment
         setContenCellDisplayHandlers(ugood);
+        selectedPane.getChildren().add(ugood.getHolder());
         if (temp%5 == 0){
-            selectedPane.getRowConstraints().add(new RowConstraints(130));
             KeyFrame f1 = new KeyFrame(Duration.millis(80), e->setContentScrollBarVisAmount(tempPane));
             Timeline ss = new Timeline(f1);
             ss.play();
         }
-        selectedPane.add(ugood.getHolder(),temp%5,temp/5);
         projectContentMap.get(currentTab.getText()).add(ugood);
     }
 
@@ -536,10 +531,10 @@ public class MainNavController implements Initializable{
             @Override
             public void handle(Event event) {
                 AnchorPane selectedPane = (AnchorPane) ((Rectangle)event.getSource()).getParent();
+                FlowPane flP = (FlowPane) selectedPane.getParent();
                 String key = selectedPane.getParent().getId();
-                int col = GridPane.getColumnIndex(selectedPane);
-                int row = GridPane.getRowIndex(selectedPane);
-                selectedCell = projectContentMap.get(key).get(row*5+col);
+
+                selectedCell = projectContentMap.get(key).get(flP.getChildren().indexOf(selectedPane));
                 try {
                     onContentDisplayCellClicked();
                 } catch (IOException e) {
@@ -590,10 +585,10 @@ public class MainNavController implements Initializable{
             @Override
             public void handle(Event event) {
                 AnchorPane selectedPane = (AnchorPane) ((ImageView)event.getSource()).getParent();
+                FlowPane parentFlow = (FlowPane) selectedPane.getParent();
                 String key = selectedPane.getParent().getId();
-                int col = GridPane.getColumnIndex(selectedPane);
-                int row = GridPane.getRowIndex(selectedPane);
-                selectedCell = projectContentMap.get(key).get(row*5+col);
+                int index = parentFlow.getChildren().indexOf(selectedPane);
+                selectedCell = projectContentMap.get(key).get(index);
                 //TODO mark 1
                 deleteConfirm.setVisible(true);
                 contentDisplayPane.setDisable(true);
@@ -615,7 +610,7 @@ public class MainNavController implements Initializable{
 
     public void onDeleteConfirmClick(){
         AnchorPane holder = selectedCell.getHolder();
-        GridPane parentGridPane = ((GridPane)holder.getParent());
+        FlowPane parentGridPane = ((FlowPane)holder.getParent());
         String key = parentGridPane.getId();
         System.out.println(key);
         parentGridPane.getChildren().remove(holder);

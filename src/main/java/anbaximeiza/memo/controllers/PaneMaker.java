@@ -21,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Flow;
 
 import anbaximeiza.memo.ContentCell;
 import anbaximeiza.memo.SubGoal;;
@@ -94,30 +96,23 @@ public class PaneMaker {
 
     public Tab getContentTab(String name){
         Tab result = new Tab(name);
-        Random rand = new Random();
 
         ScrollPane scrollPane = new ScrollPane();
-        GridPane gridPane = new GridPane();
+        FlowPane flowPane = new FlowPane();
         scrollPane.setLayoutX(0);
         scrollPane.setLayoutY(0);
         scrollPane.setMaxSize(672, 530.4);
         scrollPane.setMinHeight(530.4);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(530);
-        gridPane.setPrefWidth(656.8);
-        gridPane.setLayoutX(0);
-        gridPane.setLayoutY(0);
+        flowPane.setPrefWidth(672);
+        flowPane.setLayoutX(0);
+        flowPane.setLayoutY(0);
         scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
 
-        ColumnConstraints cc = new ColumnConstraints();
-        cc.setPercentWidth(20);
-        gridPane.getColumnConstraints().addAll(cc,cc,cc,cc,cc);
-        gridPane.setGridLinesVisible(true);
-
         //gridPane.setGridLinesVisible(true);
-
         
-        scrollPane.setContent(gridPane);
+        scrollPane.setContent(flowPane);
         result.setContent(scrollPane);
         return result;
     }
