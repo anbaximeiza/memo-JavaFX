@@ -1,0 +1,33 @@
+4,true
+11-02-25,null,1
+Click on the blue plus sign on top left to create new Project
+Once it is created, it will be added to the project list on the left. You can rename, change the save status or delete the project. Or even rearranging them by dragging
+3
+0,4
+By default the project will not be save, click on the icon in the middle to change the save status
+0,4
+When the green tick is shown, your project will be saved when the application closed
+0,4
+Or to prevent misclick, double click on the icon to lock the project. Your project then can only be removed by deleting
+11-02-25,null,2
+The blue icon down left will create new goals for your project
+Only the main goal will be shown on the grid. In this page, you can edit the main goals and its specification, change the status of the goal, or set a deadline for the goal.
+4
+0,4
+Or creating sub-goals to better monitor your goals
+0,0
+Selecting on the priority and made use of the ordering button on the left to decide which sub-goals to solve first
+0,4
+Completed goals can be "sinked" down to the bottom of the displayer by clicking the last button
+0,4
+Dragging those subgoals to better arrange them!
+11-02-25,12-02-25,3
+When deadline has pass, an indicator will show up
+That is all about this application! Enjoy using it to track your goal
+1
+0,4
+Thank you!
+11-02-25,null,0
+Deafult
+Deafult
+0
