@@ -108,7 +108,7 @@
             <Insets />
          </opaqueInsets>
       </TextArea>
-      <TextArea fx:id="specTextArea" layoutX="15.0" layoutY="113.0" onMouseEntered="#onTitleHovered" onMouseExited="#onLabelUnHovered" prefHeight="162.0" prefWidth="594.0" visible="false" wrapText="true" />
+      <TextArea fx:id="specTextArea" layoutX="15.0" layoutY="113.0" onMouseEntered="#onSpecHovered" onMouseExited="#onLabelUnHovered" prefHeight="139.0" prefWidth="594.0" visible="false" wrapText="true" />
       <ImageView fx:id="titleEdit" fitHeight="36.0" fitWidth="29.0" layoutX="336.0" layoutY="67.0" onMouseClicked="#onTitleEditClicked" onMouseEntered="#onTitleEditHovered" onMouseExited="#onEditUnHovered" opacity="0.25" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../img/rename_icon.png" />

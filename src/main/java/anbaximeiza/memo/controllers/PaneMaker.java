@@ -112,7 +112,6 @@ public class PaneMaker {
         ColumnConstraints cc = new ColumnConstraints();
         cc.setPercentWidth(20);
         gridPane.getColumnConstraints().addAll(cc,cc,cc,cc,cc);
-        gridPane.getRowConstraints().add(new RowConstraints(130));
         gridPane.setGridLinesVisible(true);
 
         //gridPane.setGridLinesVisible(true);

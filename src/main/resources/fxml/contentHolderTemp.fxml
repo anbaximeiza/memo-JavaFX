@@ -35,5 +35,10 @@
          </font>
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />
+      <ImageView fitHeight="32.0" fitWidth="25.0" layoutX="107.0" layoutY="2.0" opacity="0.6" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/delete_icon.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

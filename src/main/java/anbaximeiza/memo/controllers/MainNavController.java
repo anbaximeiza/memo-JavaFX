@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import anbaximeiza.memo.ContentCell;
 import anbaximeiza.memo.FileHandler;
 import anbaximeiza.memo.SubGoal;
+import anbaximeiza.memo.test;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -20,6 +21,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -56,6 +58,7 @@ public class MainNavController implements Initializable{
     @FXML private AnchorPane plusSignPane;
     @FXML private ScrollBar contentScrollBar;
     @FXML private Label deletionWarning;
+    @FXML private AnchorPane deleteConfirm;
 
     @FXML private AnchorPane loadingCell;
 
@@ -206,22 +209,6 @@ public class MainNavController implements Initializable{
     }
 
     public void initializeProjectTabMap() throws IOException{
-        EventHandler<Event> onCellHolderClicked = new EventHandler<Event>() {
-            @Override
-            public void handle(Event event) {
-                AnchorPane selectedPane = (AnchorPane) ((Rectangle)event.getSource()).getParent();
-                String key = ((GridPane)selectedPane.getParent()).getId();
-                int col = GridPane.getColumnIndex(selectedPane);
-                int row = GridPane.getRowIndex(selectedPane);
-                selectedCell = projectContentMap.get(key).get(row*5+col);
-                try {
-                    onContentDisplayCellClicked();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            
-        };
         for (String key: projectNameSet){
             Tab displayingTab = paneMaker.getContentTab(key);
             ScrollPane scroll = (ScrollPane) displayingTab.getContent();
@@ -229,7 +216,9 @@ public class MainNavController implements Initializable{
             int gridSize = 0;
             for (ContentCell cell: projectContentMap.get(key)){
                 ((ImageView)cell.getHolder().getChildren().get(0)).setId(key);
-                cell.getHolder().getChildren().get(cell.getHolder().getChildren().size()-1).setOnMouseClicked(onCellHolderClicked);
+                Platform.runLater(()->{
+                    setContenCellDisplayHandlers(cell);
+                });
                 if (gridSize%5 == 0){
                     grid.getRowConstraints().add(new RowConstraints(130));
                 }
@@ -529,7 +518,21 @@ public class MainNavController implements Initializable{
         int temp = projectContentMap.get(currentTab.getText()).size();
         ContentCell ugood = paneMaker.getContentCell();
         ugood.selfUpdate(selectedPane.getChildren().size()+1);//the parameter passing in is pointless at the moment
-        ugood.getHolder().getChildren().get(ugood.getHolder().getChildren().size()-1).setOnMouseClicked(new EventHandler<Event>() {
+        setContenCellDisplayHandlers(ugood);
+        if (temp%5 == 0){
+            selectedPane.getRowConstraints().add(new RowConstraints(130));
+            KeyFrame f1 = new KeyFrame(Duration.millis(80), e->setContentScrollBarVisAmount(tempPane));
+            Timeline ss = new Timeline(f1);
+            ss.play();
+        }
+        selectedPane.add(ugood.getHolder(),temp%5,temp/5);
+        projectContentMap.get(currentTab.getText()).add(ugood);
+    }
+
+    public void setContenCellDisplayHandlers(ContentCell cell){
+        //last node of the cell holder is the close Icon;
+        Node closeIcon = cell.getHolder().getChildren().get(cell.getHolder().getChildren().size()-1);
+        EventHandler<Event> onClickEvent = new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
                 AnchorPane selectedPane = (AnchorPane) ((Rectangle)event.getSource()).getParent();
@@ -545,15 +548,86 @@ public class MainNavController implements Initializable{
 
             }
             
-        });
-        if (temp%5 == 0){
-            selectedPane.getRowConstraints().add(new RowConstraints(130));
-            KeyFrame f1 = new KeyFrame(Duration.millis(80), e->setContentScrollBarVisAmount(tempPane));
-            Timeline ss = new Timeline(f1);
-            ss.play();
-        }
-        selectedPane.add(ugood.getHolder(),temp%5,temp/5);
-        projectContentMap.get(currentTab.getText()).add(ugood);
+        };
+
+        EventHandler<Event> onRecHover = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                closeIcon.setVisible(true);
+                closeIcon.setOpacity(0.25);
+            }
+        };
+
+        EventHandler<Event> onCloseIconHover = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+               closeIcon.setOpacity(1);
+            }
+            
+        };
+
+        EventHandler<Event> onRecExit = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                Platform.runLater(()->{
+                    if(closeIcon.getOpacity()!=1){
+                        closeIcon.setVisible(false);
+                    }
+                });
+            }
+            
+        };
+
+        EventHandler<Event> onCloseIconExit = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                closeIcon.setOpacity(0.25);
+            }
+            
+        };
+
+        EventHandler<Event> onCloseIconClicked = new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                AnchorPane selectedPane = (AnchorPane) ((ImageView)event.getSource()).getParent();
+                String key = selectedPane.getParent().getId();
+                int col = GridPane.getColumnIndex(selectedPane);
+                int row = GridPane.getRowIndex(selectedPane);
+                selectedCell = projectContentMap.get(key).get(row*5+col);
+                //TODO mark 1
+                deleteConfirm.setVisible(true);
+                contentDisplayPane.setDisable(true);
+                plusSignPane.setDisable(true);
+
+            }
+            
+        };
+
+        ObservableList<Node> temp = cell.getHolder().getChildren();
+        temp.get(temp.size()-2).addEventHandler(MouseEvent.MOUSE_CLICKED, onClickEvent);
+        temp.get(temp.size()-2).addEventHandler(MouseEvent.MOUSE_ENTERED, onRecHover);
+        temp.get(temp.size()-2).addEventHandler(MouseEvent.MOUSE_EXITED, onRecExit);
+
+        temp.get(temp.size()-1).addEventHandler(MouseEvent.MOUSE_CLICKED, onCloseIconClicked);
+        temp.get(temp.size()-1).addEventHandler(MouseEvent.MOUSE_ENTERED, onCloseIconHover);
+        temp.get(temp.size()-1).addEventHandler(MouseEvent.MOUSE_EXITED, onCloseIconExit);
+    }
+
+    public void onDeleteConfirmClick(){
+        AnchorPane holder = selectedCell.getHolder();
+        GridPane parentGridPane = ((GridPane)holder.getParent());
+        String key = parentGridPane.getId();
+        System.out.println(key);
+        parentGridPane.getChildren().remove(holder);
+        projectContentMap.get(key).remove(selectedCell);
+        displayMessage("Goal removed", MessageType.SUCCESS);
+        onDeleteCancelClick();
+    }
+
+    public void onDeleteCancelClick(){
+        plusSignPane.setDisable(false);
+        contentDisplayPane.setDisable(false);
+        deleteConfirm.setVisible(false);
     }
 
     //needs to be called with a delay otherwise when the scrollpane is not fully loaded
